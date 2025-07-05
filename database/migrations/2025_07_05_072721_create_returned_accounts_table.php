@@ -11,8 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('coc_accounts', function (Blueprint $table) {
+        Schema::create('returned_accounts', function (Blueprint $table) {
             $table->id();
+            $table->string('name')->index();
+            $table->foreignId('account_id')->index()->constrained('accounts')->cascadeOnDelete();
+            $table->unsignedBigInteger('return_price');
+            $table->boolean('is_password_changed')->default(false);
             $table->timestamps();
         });
     }
@@ -22,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('coc_accounts');
+        Schema::dropIfExists('returned_accounts');
     }
 };
