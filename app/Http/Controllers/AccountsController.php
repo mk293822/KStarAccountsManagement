@@ -2,17 +2,34 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\AccountResource;
+use App\Models\Account;
+use App\Services\AccountService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class AccountsController extends Controller
 {
+
+    public $accountService;
+
+    public function __construct(AccountService $account_service)
+    {
+        $this->accountService = $account_service;
+    }
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Inertia::render('accounts/index');
+        $get_accounts = $this->accountService->getAccounts($request);
+
+        $accounts = AccountResource::collection($get_accounts->paginate(20)->appends($request->query()));
+
+        return Inertia::render('accounts/index', compact('accounts'))->with('ziggy', [
+            'query' => $request->query()
+        ]);
     }
 
     /**

@@ -34,8 +34,8 @@ return new class extends Migration
             $table->foreignId('sold_by')->index()->nullable()->constrained('users')->noActionOnDelete();
             $table->foreignId('bought_by')->index()->constrained('users')->noActionOnDelete();
             // dates
-            $table->timestamp('bought_date');
-            $table->timestamp('sold_date')->nullable();
+            $table->date('bought_date');
+            $table->date('sold_date')->nullable();
             $table->timestamps();
         });
     }

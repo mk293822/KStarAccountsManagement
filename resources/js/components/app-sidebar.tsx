@@ -1,9 +1,10 @@
 import { NavMain } from '@/components/nav-main';
-import { Sidebar, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
+import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { LayoutGrid, TableIcon } from 'lucide-react';
+import { LayoutGrid, Table2Icon } from 'lucide-react';
 import AppLogo from './app-logo';
+import { NavUser } from './nav-user';
 
 const mainNavItems: NavItem[] = [
     {
@@ -14,7 +15,7 @@ const mainNavItems: NavItem[] = [
     {
         title: 'Accounts',
         href: '/accounts',
-        icon: TableIcon,
+        icon: Table2Icon,
     },
 ];
 
@@ -50,10 +51,10 @@ export function AppSidebar() {
                 <NavMain items={mainNavItems} />
             </SidebarContent>
 
-            {/* <SidebarFooter>
-                <NavFooter items={footerNavItems} className="mt-auto" />
+            <SidebarFooter>
+                {/* <NavFooter items={footerNavItems} className="mt-auto" /> */}
                 <NavUser />
-            </SidebarFooter> */}
+            </SidebarFooter>
         </Sidebar>
     );
 }

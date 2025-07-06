@@ -41,3 +41,52 @@ export interface User {
     updated_at: string;
     [key: string]: unknown; // This allows for additional properties...
 }
+
+
+// account
+export interface Account {
+    id: number;
+    account_name: string;
+    account_email: string;
+    seller_name: string;
+    buyer_name: string | null;
+    th_level: number;
+
+    bought_price: number;
+    sold_price: number;
+    profit: number;
+    loss: number;
+
+    is_acc_protection_changed: boolean;
+    is_sold: boolean;
+    is_email_changed: boolean;
+    is_email_disabled: boolean;
+    is_returned: boolean;
+    is_deposit: boolean;
+
+    sold_by: number | null;
+    bought_by: number;
+
+    bought_date: string; // ISO 8601 string, e.g. "2025-07-05T13:15:30"
+    sold_date: string | null;
+}
+
+export interface ReturnedAccount {
+    id: number;
+    account_id: number;
+    name: string;
+    return_price: number;
+    is_password_changed: boolean;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface DepositAccount {
+    id: number;
+    account_id: number;
+    name: string;
+    deposit_amount: number;
+    gave_account: string;
+    created_at: string;
+    updated_at: string;
+}

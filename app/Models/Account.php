@@ -39,8 +39,8 @@ class Account extends Model
     protected function casts(): array
     {
         return [
-            'bought_date' => 'datetime',
-            'sold_date' => 'datetime',
+            'bought_date' => 'date',
+            'sold_date' => 'date',
         ];
     }
 
@@ -51,11 +51,22 @@ class Account extends Model
         }
         return null;
     }
+
     public function depositAccount()
     {
         if ($this->is_returned) {
             return $this->hasOne(DepositAccount::class);
         }
         return null;
+    }
+
+    public function soldBy()
+    {
+        return $this->belongsTo(User::class, 'sold_by', 'id');
+    }
+
+    public function boughtBy()
+    {
+        return $this->belongsTo(User::class, 'bought_by', 'id');
     }
 }

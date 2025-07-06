@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Carbon;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Account>
@@ -17,8 +18,10 @@ class AccountFactory extends Factory
     public function definition(): array
     {
         $boughtPrice = $this->faker->numberBetween(10000, 300000);
-        $soldPrice = $this->faker->numberBetween(0, 40000);
-        $isSold = $soldPrice > 0;
+        $isSold = $this->faker->boolean(50);
+        $soldPrice = $isSold ? $this->faker->numberBetween(10000, 40000) : 0;
+        $boughtDate = Carbon::now()->subDays(rand(0, 30));
+        $isReturned = !$isSold && $this->faker->boolean(20);
 
         return [
             'account_name' => $this->faker->userName,
@@ -35,15 +38,15 @@ class AccountFactory extends Factory
             'is_acc_protection_changed' => $this->faker->boolean(90),
             'is_sold' => $isSold,
             'is_email_changed' => $this->faker->boolean(95),
-            'is_email_disabled' => $this->faker->boolean(5),
-            'is_returned' => $this->faker->boolean(5),
-            'is_deposit' => $this->faker->boolean(5),
+            'is_email_disabled' => $this->faker->boolean(10),
+            'is_deposit' => !$isSold && $this->faker->boolean(20),
+            'is_returned' => $isReturned,
 
             'sold_by' => 1,
             'bought_by' => 1,
 
-            'bought_date' => now(),
-            'sold_date' => $isSold ? now() : null,
+            'bought_date' => $boughtDate->toDateString(),
+            'sold_date' => $isSold ? $boughtDate->copy()->addDays(rand(1, 10))->toDateString() : null,
         ];
     }
 }
