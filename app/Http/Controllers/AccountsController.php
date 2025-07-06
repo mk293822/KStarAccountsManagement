@@ -26,10 +26,9 @@ class AccountsController extends Controller
         $get_accounts = $this->accountService->getAccounts($request);
 
         $accounts = AccountResource::collection($get_accounts->paginate(20)->appends($request->query()));
+        $query = $request->query();
 
-        return Inertia::render('accounts/index', compact('accounts'))->with('ziggy', [
-            'query' => $request->query()
-        ]);
+        return Inertia::render('accounts/index', compact('accounts', 'query'));
     }
 
     /**
