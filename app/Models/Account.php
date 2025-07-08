@@ -46,19 +46,14 @@ class Account extends Model
 
     public function returnedAccount()
     {
-        if ($this->is_returned) {
-            return $this->hasOne(ReturnedAccount::class);
-        }
-        return null;
+        return $this->hasOne(ReturnedAccount::class);
     }
 
     public function depositAccount()
     {
-        if ($this->is_returned) {
-            return $this->hasOne(DepositAccount::class);
-        }
-        return null;
+        return $this->hasOne(DepositAccount::class);
     }
+
 
     public function soldBy()
     {

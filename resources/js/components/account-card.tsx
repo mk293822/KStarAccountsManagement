@@ -2,7 +2,8 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { cn } from '@/lib/utils';
 import type { Account } from '@/types';
 import { ChevronDown } from 'lucide-react';
-import { InfoRow } from './info-row';
+import { InfoRow } from './components';
+import { Link } from '@inertiajs/react';
 
 type AccountCardProps = {
     account: Account;
@@ -11,26 +12,22 @@ type AccountCardProps = {
     onToggle: () => void;
 };
 
-
 export default function AccountCard({ account, index, onToggle, isOpen }: AccountCardProps) {
     const account_status = cn(account.is_sold && 'Sold', account.is_deposit && 'Deposit');
-    // Adjusted colors for each status for better visibility
-    const statusStyles =
-        {
-            Sold: 'bg-red-600 text-white',
-            Deposit: 'bg-blue-600 text-white',
-        }[account_status] ?? 'bg-gray-600 text-white'; // Default gray with white text
+    const statusStyles = account.is_sold ? 'bg-red-600 text-white' : account.is_deposit ? 'bg-blue-600 text-white' : 'bg-green-600 text-white';
 
     return (
         <Collapsible
             open={isOpen}
             onOpenChange={onToggle}
-            className={cn(
-                'group rounded-xl border border-zinc-800 bg-zinc-950 transition-all hover:bg-zinc-900',
-                account.is_email_disabled && 'bg-red-800 hover:bg-red-600',
-            )}
+            className="group rounded-xl border border-zinc-800 bg-zinc-950 transition-all hover:bg-zinc-900"
         >
-            <CollapsibleTrigger className="flex w-full items-center justify-between px-4 py-3 text-left text-white transition">
+            <CollapsibleTrigger
+                className={cn(
+                    'flex w-full items-center justify-between px-4 py-3 text-left text-white transition',
+                    account.is_email_disabled && 'rounded-xl bg-red-800 hover:bg-red-600',
+                )}
+            >
                 <div>
                     <p className="flex flex-row items-center gap-2 text-sm font-semibold">
                         <span className="text-gray-400"># {index + 1}</span> {/* Index */}
@@ -51,7 +48,7 @@ export default function AccountCard({ account, index, onToggle, isOpen }: Accoun
                 </div>
             </CollapsibleTrigger>
 
-            <CollapsibleContent className="space-y-2 border-t border-zinc-800 bg-zinc-900 px-4 py-4 text-sm text-gray-300">
+            <CollapsibleContent className="space-y-2 border-t border-zinc-800 px-4 pt-4 pb-2 text-sm text-gray-300">
                 <InfoRow label="Town Hall Level:" value={<span className="text-blue-400">{account.th_level}</span>} />
                 <InfoRow label="Bought Price:" value={<span className="text-green-400">${account.bought_price}</span>} />
                 {account.is_sold && (
@@ -62,20 +59,63 @@ export default function AccountCard({ account, index, onToggle, isOpen }: Accoun
                 )}
                 <InfoRow label="Account Protection Changed:" value={account.is_acc_protection_changed ? 'Yes' : 'No'} />
                 <InfoRow label="Email Changed:" value={account.is_email_changed ? 'Yes' : 'No'} />
-                <InfoRow label="Returned:" value={account.is_returned ? 'Yes' : 'No'} />
-                <InfoRow label="Deposit:" value={account.is_deposit ? 'Yes' : 'No'} />
                 <InfoRow label="Bought By:" value={account.bought_by} />
+                <InfoRow label="Bought Date:" value={new Date(account.bought_date).toLocaleDateString()} />
+                {account.is_sold && account.sold_date && <InfoRow label="Sold Date:" value={new Date(account.sold_date).toLocaleDateString()} />}
                 {account.is_sold && <InfoRow label="Sold By:" value={account.sold_by ?? '-'} />}
                 <InfoRow
                     label="Status:"
                     value={
                         <span
-                            className={cn('rounded-full px-2 py-1 font-semibold', statusStyles, !account.is_sold && !account.is_deposit && 'bg-green-600')}
+                            className={cn(
+                                'rounded-full px-2 py-1 font-semibold',
+                                statusStyles,
+                                !account.is_sold && !account.is_deposit && 'bg-green-600',
+                            )}
                         >
                             {cn(account_status, !account.is_deposit && !account.is_sold && 'Available')}
                         </span>
                     }
                 />
+                <div className="flex items-center justify-end gap-2">
+                    {account.is_sold && (
+                        <Link
+                            className="rounded border border-green-500 bg-transparent px-4 py-0.5 text-white hover:bg-green-500"
+                            href={route('account.edit', account.id)}
+                        >
+                            Return
+                        </Link>
+                    )}
+                    {!account.is_sold && !account.is_deposit && (
+                        <>
+                            <Link
+                                className="rounded border border-red-500 bg-transparent px-4 py-0.5 text-white hover:bg-red-500"
+                                href={route('account.edit', account.id)}
+                            >
+                                Sold
+                            </Link>
+                            <Link
+                                className="rounded border border-blue-500 bg-transparent px-4 py-0.5 text-white hover:bg-blue-500"
+                                href={route('account.edit', account.id)}
+                            >
+                                Deposit
+                            </Link>
+                        </>
+                    )}
+
+                    <Link
+                        className="rounded border border-blue-500 bg-transparent px-4 py-0.5 text-white hover:bg-blue-500"
+                        href={route('account.edit', account.id)}
+                    >
+                        Edit
+                    </Link>
+                    <Link
+                        href={route('account.show', account.id)}
+                        className="inline-block rounded border border-purple-500 bg-transparent px-3 py-0.5 text-sm font-medium text-white transition hover:bg-purple-500"
+                    >
+                        View More Details
+                    </Link>
+                </div>
             </CollapsibleContent>
         </Collapsible>
     );

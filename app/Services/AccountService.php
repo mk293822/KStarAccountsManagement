@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Http\Resources\AccountResource;
 use App\Models\Account;
 use Illuminate\Http\Request;
+use phpDocumentor\Reflection\Types\Boolean;
 
 class AccountService {
 
@@ -13,7 +14,14 @@ class AccountService {
         $query = $request->input('searchQuery');
         $sort_by = $request->input('sort_by');
         $filter_by = $request->input('filter_by');
+        $filter_value = $request->input('filter_value', true);
         $order = $request->input('order_by', 'desc');
+
+        $filterValue = match ($filter_value) {
+            'true' => true,
+            'false' => false,
+            default => true,
+        };
 
         $sort_parameters = [
             'th_level',
@@ -49,14 +57,14 @@ class AccountService {
 
         // ⚙️ Filter logic (single flag only; adjust for multiple if needed)
         if ($filter_by && in_array($filter_by, $filter_parameters)) {
-            $get_accounts->where($filter_by, true);
+            $get_accounts->where($filter_by, $filterValue);
         }
 
         // 🔃 Sorting logic
         if ($sort_by && in_array($sort_by, $sort_parameters)) {
             $get_accounts->orderBy($sort_by, $order); // or 'asc'
         } else {
-            $get_accounts->latest('bought_date');
+            $get_accounts->orderBy('bought_date', $order);
         }
 
         return $get_accounts;

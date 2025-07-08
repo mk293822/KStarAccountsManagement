@@ -30,8 +30,6 @@ type Props = {
 const Index = ({ accounts }: Props) => {
     const [openIndexes, setOpenIndexes] = useState<Set<number>>(new Set());
 
-    console.log(accounts);
-
     const toggleIndex = (index: number) => {
         setOpenIndexes((prev) => {
             const next = new Set(prev);

@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AccountCreateRequest;
 use App\Http\Resources\AccountResource;
 use App\Models\Account;
 use App\Services\AccountService;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+use IntlChar;
 
 class AccountsController extends Controller
 {
@@ -31,20 +35,23 @@ class AccountsController extends Controller
         return Inertia::render('accounts/index', compact('accounts', 'query'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function create(AccountCreateRequest $request)
     {
-        //
-    }
+        $validated = $request->validated();
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
+        DB::beginTransaction();
+
+        try {
+            Account::create($validated);
+
+            DB::commit();
+
+            return back()->with('success', 'Account created successfully!');
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return back()->withErrors('Something went wrong. Please try again.');
+        }
     }
 
     /**
@@ -52,7 +59,16 @@ class AccountsController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $get_account = Account::with([
+            'returnedAccount',
+            'depositAccount',
+            'soldBy:id,name',
+            'boughtBy:id,name',
+        ])->findOrFail($id);
+
+        $account = new AccountResource($get_account);
+
+        return Inertia::render('accounts/show', compact('account'));
     }
 
     /**
@@ -60,7 +76,16 @@ class AccountsController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $get_account = Account::with([
+            'returnedAccount',
+            'depositAccount',
+            'soldBy:id,name',
+            'boughtBy:id,name',
+        ])->findOrFail($id);
+
+        $account = new AccountResource($get_account);
+
+        return Inertia::render('accounts/edit', compact('account'));
     }
 
     /**

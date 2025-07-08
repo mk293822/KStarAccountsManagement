@@ -3,6 +3,7 @@ import type { Config } from 'ziggy-js';
 
 export interface Auth {
     user: User;
+    all_users: User[];
 }
 
 export interface BreadcrumbItem {
@@ -42,33 +43,35 @@ export interface User {
     [key: string]: unknown; // This allows for additional properties...
 }
 
-
 // account
 export interface Account {
-    id: number;
+    id?: number;
     account_name: string;
     account_email: string;
     seller_name: string;
-    buyer_name: string | null;
+    buyer_name?: string | null;
     th_level: number;
 
     bought_price: number;
-    sold_price: number;
-    profit: number;
-    loss: number;
+    sold_price?: number;
+    profit?: number;
+    loss?: number;
 
     is_acc_protection_changed: boolean;
-    is_sold: boolean;
+    is_sold?: boolean;
     is_email_changed: boolean;
     is_email_disabled: boolean;
-    is_returned: boolean;
-    is_deposit: boolean;
+    is_returned?: boolean;
+    is_deposit?: boolean;
 
-    sold_by: number | null;
-    bought_by: number;
+    sold_by?: string | null;
+    bought_by: string;
 
     bought_date: string; // ISO 8601 string, e.g. "2025-07-05T13:15:30"
-    sold_date: string | null;
+    sold_date?: string | null;
+
+    returned_account?: ReturnedAccount;
+    deposit_account?: DepositAccount;
 }
 
 export interface ReturnedAccount {
@@ -89,4 +92,18 @@ export interface DepositAccount {
     gave_account: string;
     created_at: string;
     updated_at: string;
+}
+
+export interface AccountCreateForm {
+    account_name: string;
+    account_email: string;
+    seller_name: string;
+    th_level: number | undefined;
+
+    bought_price: number | undefined;
+    is_acc_protection_changed: boolean;
+    is_email_changed: boolean;
+    is_email_disabled: boolean;
+    bought_by: number;
+    bought_date: string; // ISO 8601 string, e.g. "2025-07-05T13:15:30"
 }

@@ -36,10 +36,13 @@ class AccountResource extends JsonResource
             'is_deposit' => (bool) $this->is_deposit,
 
             'bought_by' => $this->boughtBy->name,
-            'sold_by' => $this->soldBy->name,
+            'sold_by' => $this->soldBy?->name,
 
             'bought_date' => $this->bought_date?->toDateTimeString(),
             'sold_date' => $this->sold_date?->toDateTimeString(),
+
+            'returned_account' => new ReturnedAccountResource($this->whenLoaded('returnedAccount')),
+            'deposit_account' => new DepositAccountResource($this->whenLoaded('depositAccount')),
         ];
     }
 }
