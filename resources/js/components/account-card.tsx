@@ -6,6 +6,7 @@ import { InfoRow } from './components';
 import { Link } from '@inertiajs/react';
 import { useState } from 'react';
 import SoldModal from './sold-modal';
+import ReturnModal from './return-modal';
 
 type AccountCardProps = {
     account: Account;
@@ -59,16 +60,16 @@ export default function AccountCard({ account, index, onToggle, isOpen }: Accoun
                 <CollapsibleContent className="space-y-2 border-t border-zinc-800 px-4 pt-4 pb-2 text-sm text-gray-300">
                     <InfoRow label="Town Hall Level:" value={<span className="text-blue-400">{account.th_level}</span>} />
                     <InfoRow label="Bought Price:" value={<span className="text-green-400">${account.bought_price}</span>} />
+                    <InfoRow label="Account Protection Changed:" value={account.is_acc_protection_changed ? 'Yes' : 'No'} />
+                    <InfoRow label="Email Changed:" value={account.is_email_changed ? 'Yes' : 'No'} />
+                    <InfoRow label="Bought By:" value={account.bought_by} />
+                    <InfoRow label="Bought Date:" value={new Date(account.bought_date).toLocaleDateString()} />
                     {account.is_sold && (
                         <InfoRow
                             label="Sold Price:"
                             value={<span className="text-yellow-400">{account.sold_price ? `$${account.sold_price}` : '-'}</span>}
                         />
                     )}
-                    <InfoRow label="Account Protection Changed:" value={account.is_acc_protection_changed ? 'Yes' : 'No'} />
-                    <InfoRow label="Email Changed:" value={account.is_email_changed ? 'Yes' : 'No'} />
-                    <InfoRow label="Bought By:" value={account.bought_by} />
-                    <InfoRow label="Bought Date:" value={new Date(account.bought_date).toLocaleDateString()} />
                     {account.is_sold && account.sold_date && <InfoRow label="Sold Date:" value={new Date(account.sold_date).toLocaleDateString()} />}
                     {account.is_sold && <InfoRow label="Sold By:" value={account.sold_by ?? '-'} />}
                     <InfoRow
@@ -85,7 +86,7 @@ export default function AccountCard({ account, index, onToggle, isOpen }: Accoun
                             </span>
                         }
                     />
-                    <div className="flex items-center justify-end gap-2">
+                    <div className="mt-2 flex items-center justify-end gap-2">
                         {account.is_sold && (
                             <button
                                 onClick={() => setOpenReturnModal(!openReturnModal)}
@@ -129,6 +130,7 @@ export default function AccountCard({ account, index, onToggle, isOpen }: Accoun
 
             {/* Modals */}
             <SoldModal show={openSoldModal} onClose={() => setOpenSoldModal(false)} account={account} />
+            <ReturnModal show={openReturnModal} onClose={() => setOpenReturnModal(false)} account={account} />
         </>
     );
 }

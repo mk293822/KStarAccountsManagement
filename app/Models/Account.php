@@ -19,8 +19,6 @@ class Account extends Model
 
         'bought_price',
         'sold_price',
-        'profit',
-        'loss',
 
         'is_acc_protection_changed',
         'is_sold',
@@ -63,5 +61,29 @@ class Account extends Model
     public function boughtBy()
     {
         return $this->belongsTo(User::class, 'bought_by', 'id');
+    }
+
+    public function getProfitAttribute()
+    {
+        $b_price = $this->bought_price;
+        $s_price = $this->sold_price;
+
+        if ($s_price < 1 || $b_price > $s_price) {
+            return null;
+        }
+
+        return $s_price - $b_price;
+    }
+
+    public function getLossAttribute()
+    {
+        $b_price = $this->bought_price;
+        $s_price = $this->sold_price;
+
+        if ($s_price < 1 || $b_price < $s_price) {
+            return null;
+        }
+
+        return $b_price - $s_price;
     }
 }

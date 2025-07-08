@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AccountCreateRequest;
+use App\Http\Requests\AccountReturnRequest;
 use App\Http\Requests\AccountSoldRequest;
 use App\Http\Resources\AccountResource;
 use App\Models\Account;
@@ -39,53 +40,33 @@ class AccountsController extends Controller
 
     public function create(AccountCreateRequest $request)
     {
-        $validated = $request->validated();
+        $account_create = $this->accountService->create($request);
 
-        DB::beginTransaction();
-
-        try {
-            $account =  new Account();
-            $account->fill($validated);
-            $account->bought_by = $request->user()->id;
-            $account->save();
-
-            DB::commit();
-
+        if ($account_create === 200) {
             return back()->with('success', 'Account created successfully!');
-        } catch (Exception $e) {
-            DB::rollBack();
-
+        } else {
             return back()->withErrors('Something went wrong. Please try again.');
         }
     }
 
     public function sold(AccountSoldRequest $request, $id)
     {
-        $validated = $request->validated();
+        $account_sold = $this->accountService->sold($request, $id);
 
-        try {
-            $account = Account::findOrFail($id);
-            $account->fill($validated);
-            $account->sold_by = $request->user()->id;
-            $account->is_sold = true;
-
-            $bought_price = $account->bought_price;
-            $sold_price = $validated['sold_price'];
-
-            if ($sold_price > $bought_price) {
-                $account->profit = $sold_price - $bought_price;
-            } else {
-                $account->loss = $bought_price - $sold_price;
-            }
-
-            $account->save();
-
-            DB::commit();
-
+        if ($account_sold === 200) {
             return back()->with('success', 'Account Updated successfully!');
-        } catch (Exception $e) {
-            DB::rollBack();
+        } else {
+            return back()->withErrors('Something went wrong. Please try again.');
+        }
+    }
 
+    public function return(AccountReturnRequest $request, $id)
+    {
+        $account_return = $this->accountService->return($request, $id);
+
+        if ($account_return === 200) {
+            return back()->with('success', 'Account Return successfully!');
+        } else {
             return back()->withErrors('Something went wrong. Please try again.');
         }
     }

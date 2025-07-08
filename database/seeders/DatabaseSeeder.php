@@ -31,6 +31,8 @@ class DatabaseSeeder extends Seeder
                     'account_id' => $account->id,
                     'return_price' => fake()->numberBetween(10000, 300000),
                     'is_password_changed' => fake()->boolean(90),
+                    'sold_price' => $account->sold_price,
+                    'returned_date' => today(),
                 ]);
             }
 

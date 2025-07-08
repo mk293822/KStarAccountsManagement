@@ -74,12 +74,14 @@ const Show = ({ account }: { account: Account }) => {
                         </div>
                     )}
 
-                    {(account.profit > 0 || account.loss > 0) && (
+                    {((account.profit ?? 0) > 0 || (account.loss ?? 0) > 0) && (
                         <div>
                             <SectionHeader title="Summary" />
                             <div className="space-y-2">
-                                {account.profit > 0 && <InfoRow label="Profit:" value={<span className="text-green-400">${account.profit}</span>} />}
-                                {account.loss > 0 && <InfoRow label="Loss:" value={<span className="text-red-400">${account.loss}</span>} />}
+                                {(account.profit ?? 0) > 0 && (
+                                    <InfoRow label="Profit:" value={<span className="text-green-400">${account.profit}</span>} />
+                                )}
+                                {(account.loss ?? 0) > 0 && <InfoRow label="Loss:" value={<span className="text-red-400">${account.loss}</span>} />}
                             </div>
                         </div>
                     )}
@@ -87,18 +89,18 @@ const Show = ({ account }: { account: Account }) => {
 
                 <div>
                     <SectionHeader title="Statuses" />
-                <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-                    <Flag label="Protection Changed" value={account.is_acc_protection_changed} />
-                    <Flag label="Email Changed" value={account.is_email_changed} />
-                    <Flag label="Sold" value={account.is_sold} />
-                    <Flag label="Returned" value={account.is_returned} />
-                    <Flag label="Deposit" value={account.is_deposit} />
-                    <div
-                        className={`rounded-full px-3 py-1 text-xs font-semibold text-white shadow ${!account.is_email_disabled ? 'bg-green-600' : 'bg-red-600/70 text-gray-300'}`}
-                    >
-                        Email Disabled: {account.is_email_disabled ? 'Yes' : 'No'}
+                    <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                        <Flag label="Protection Changed" value={account.is_acc_protection_changed} />
+                        <Flag label="Email Changed" value={account.is_email_changed} />
+                        <Flag label="Sold" value={!!account.is_sold} />
+                        <Flag label="Returned" value={!!account.is_returned} />
+                        <Flag label="Deposit" value={!!account.is_deposit} />
+                        <div
+                            className={`rounded-full px-3 py-1 text-xs font-semibold text-white shadow ${!account.is_email_disabled ? 'bg-green-600' : 'bg-red-600/70 text-gray-300'}`}
+                        >
+                            Email Disabled: {account.is_email_disabled ? 'Yes' : 'No'}
+                        </div>
                     </div>
-                </div>
                 </div>
 
                 {account.returned_account && (
@@ -107,6 +109,10 @@ const Show = ({ account }: { account: Account }) => {
                         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <Info label="Return By" value={account.returned_account.name} />
                             <Info label="Return Price" value={`$${account.returned_account.return_price}`} />
+                        </div>
+                        <div className="mt-2 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                            <Info label="Sold Price" value={`$${account.returned_account.sold_price}`} />
+                            <Info label="Return By" value={new Date(account.returned_account.returned_date).toLocaleDateString()} />
                         </div>
                         <div className="mt-2">
                             <Flag label="Password Changed" value={account.returned_account.is_password_changed} />

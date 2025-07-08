@@ -12,9 +12,18 @@ class ReturnedAccount extends Model
     protected $fillable = [
         'name',
         'account_id',
+        'sold_price',
         'return_price',
-        'is_password_changed'
+        'is_password_changed',
+        'returned_date'
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'returned_date' => 'date',
+        ];
+    }
 
     public function account()
     {
