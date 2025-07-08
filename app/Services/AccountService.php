@@ -2,9 +2,15 @@
 
 namespace App\Services;
 
+use App\Http\Requests\AccountCreateRequest;
+use App\Http\Requests\AccountReturnRequest;
+use App\Http\Requests\AccountSoldRequest;
 use App\Http\Resources\AccountResource;
 use App\Models\Account;
+use App\Models\ReturnedAccount;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use phpDocumentor\Reflection\Types\Boolean;
 
 class AccountService {
@@ -29,8 +35,6 @@ class AccountService {
             'sold_date',
             'bought_price',
             'sold_price',
-            'profit',
-            'loss',
         ];
 
         $filter_parameters = [
@@ -68,5 +72,81 @@ class AccountService {
         }
 
         return $get_accounts;
+    }
+
+    public function create(AccountCreateRequest $request)
+    {
+        $validated = $request->validated();
+
+        DB::beginTransaction();
+
+        try {
+            $account =  new Account();
+            $account->fill($validated);
+            $account->bought_by = $request->user()->id;
+            $account->save();
+
+            DB::commit();
+
+            return 200;
+        } catch (Exception $e) {
+            DB::rollBack();
+            return null;
+        }
+    }
+
+    public function sold(AccountSoldRequest $request, $id)
+    {
+        $validated = $request->validated();
+
+        try {
+            $account = Account::findOrFail($id);
+            $account->fill($validated);
+            $account->sold_by = $request->user()->id;
+            $account->is_sold = true;
+
+            $account->save();
+
+            DB::commit();
+
+            return 200;
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return null;
+        }
+    }
+
+    public function return(AccountReturnRequest $request, $id)
+    {
+        $validated = $request->validated();
+
+        try {
+            $account = Account::findOrFail($id);
+
+            $return_acc = new ReturnedAccount();
+            $return_acc->fill($validated);
+            $return_acc->name = $account->buyer_name;
+            $return_acc->account_id = $account->id;
+            $return_acc->sold_price = $account->sold_price;
+            $return_acc->save();
+
+            $account->update([
+                'is_sold' => false,
+                'sold_price' => 0,
+                'sold_by' => null,
+                'sold_date' => null,
+                'is_returned' => true,
+                'buyer_name' => null
+            ]);
+
+            DB::commit();
+
+            return 200;
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return null;
+        }
     }
 }

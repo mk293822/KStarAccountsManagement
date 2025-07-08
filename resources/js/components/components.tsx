@@ -30,7 +30,9 @@ export const Info = ({ label, value }: { label: string; value: string | number }
 );
 
 export const Flag = ({ label, value }: { label: string; value: boolean }) => (
-    <div className={`rounded-full px-3 py-1 text-xs font-semibold text-white shadow ${value ? 'bg-green-600' : 'bg-red-600/70 text-gray-300'}`}>
+    <div
+        className={`max-h-6 rounded-full px-3 py-1 text-xs font-semibold text-white shadow ${value ? 'bg-green-600' : 'bg-red-600/70 text-gray-300'}`}
+    >
         {label}: {value ? 'Yes' : 'No'}
     </div>
 );

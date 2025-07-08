@@ -82,6 +82,8 @@ export interface ReturnedAccount {
     is_password_changed: boolean;
     created_at: string;
     updated_at: string;
+    sold_price: number;
+    returned_date: string;
 }
 
 export interface DepositAccount {

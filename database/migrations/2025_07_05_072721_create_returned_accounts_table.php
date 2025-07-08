@@ -16,7 +16,9 @@ return new class extends Migration
             $table->string('name')->index();
             $table->foreignId('account_id')->index()->constrained('accounts')->cascadeOnDelete();
             $table->unsignedBigInteger('return_price');
+            $table->unsignedBigInteger('sold_price');
             $table->boolean('is_password_changed')->default(false);
+            $table->date('returned_date');
             $table->timestamps();
         });
     }

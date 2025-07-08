@@ -21,8 +21,6 @@ return new class extends Migration
             $table->unsignedTinyInteger('th_level', false)->index();
             $table->unsignedBigInteger('bought_price');
             $table->unsignedBigInteger('sold_price')->default(0);
-            $table->unsignedBigInteger('profit')->default(0);
-            $table->unsignedBigInteger('loss')->default(0);
             // booleans
             $table->boolean('is_acc_protection_changed')->index()->default(true);
             $table->boolean('is_sold')->index()->default(false);
