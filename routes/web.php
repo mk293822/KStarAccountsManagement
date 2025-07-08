@@ -16,6 +16,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('accounts/edit/{id}', [AccountsController::class, 'edit'])->name('account.edit');
     Route::get('accounts/{id}', [AccountsController::class, 'show'])->name('account.show');
     Route::post('accounts/create', [AccountsController::class, 'create'])->name('account.create');
+    Route::post('accounts/sold/{id}', [AccountsController::class, 'sold'])->name('account.sold');
 });
 
 require __DIR__.'/settings.php';

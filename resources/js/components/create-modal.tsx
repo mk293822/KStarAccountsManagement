@@ -1,5 +1,5 @@
-import { AccountCreateForm, SharedData } from '@/types';
-import { useForm, usePage } from '@inertiajs/react';
+import { AccountCreateForm } from '@/types';
+import { useForm } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
 import { FormEventHandler } from 'react';
 import Heading from './heading';
@@ -16,15 +16,12 @@ type Props = {
 };
 
 const CreateAccount = ({ show, onClose }: Props) => {
-    const { all_users } = usePage<SharedData>().props.auth;
-
     const { data, setData, post, processing, errors } = useForm<Required<AccountCreateForm>>({
         account_name: '',
         account_email: '',
         th_level: undefined,
         seller_name: '',
         bought_price: undefined,
-        bought_by: 1,
         bought_date: '',
         is_acc_protection_changed: false,
         is_email_changed: false,
@@ -34,6 +31,7 @@ const CreateAccount = ({ show, onClose }: Props) => {
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
         post(route('account.create'));
+        onClose();
     };
 
     return (
@@ -42,7 +40,7 @@ const CreateAccount = ({ show, onClose }: Props) => {
                 <Heading title="Create Account" description="Enter your details to create a new account." />
 
                 <form className="" onSubmit={submit}>
-                    <div className="hide-scrollbar grid max-h-[70vh] grid-cols-1 gap-4 overflow-y-auto sm:grid-cols-2 sm:max-h-[100vh]">
+                    <div className="hide-scrollbar grid max-h-[70vh] grid-cols-1 gap-4 overflow-y-auto sm:max-h-[100vh] sm:grid-cols-2">
                         <div>
                             <Label htmlFor="acc_name">Account Name</Label>
                             <Input
@@ -127,23 +125,6 @@ const CreateAccount = ({ show, onClose }: Props) => {
                                 onChange={(e) => setData('bought_date', e.target.value)}
                             />
                             <InputError message={errors.bought_date} />
-                        </div>
-
-                        <div className="sm:col-span-2">
-                            <Label htmlFor="bought_by">Bought By</Label>
-                            <select
-                                id="bought_by"
-                                value={data.bought_by}
-                                onChange={(e) => setData('bought_by', Number(e.target.value))}
-                                className="w-full rounded-md border border-gray-300 p-2"
-                            >
-                                {all_users.map((user) => (
-                                    <option key={user.id} value={user.id}>
-                                        {user.name}
-                                    </option>
-                                ))}
-                            </select>
-                            <InputError message={errors.bought_by} />
                         </div>
 
                         <div className="grid grid-cols-1 gap-4 sm:col-span-2 md:grid-cols-3">

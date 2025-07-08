@@ -30,7 +30,6 @@ class AccountCreateRequest extends FormRequest
             'is_acc_protection_changed' => ['required', 'boolean'],
             'is_email_changed'          => ['required', 'boolean'],
             'is_email_disabled'         => ['required', 'boolean'],
-            'bought_by'                 => ['required', 'integer', 'exists:users,id'],
             'bought_date'               => ['required', 'date', 'date_format:Y-m-d'],
         ];
     }
