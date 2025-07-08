@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AccountCreateRequest;
+use App\Http\Requests\AccountSoldRequest;
 use App\Http\Resources\AccountResource;
 use App\Models\Account;
 use App\Services\AccountService;
@@ -35,6 +36,7 @@ class AccountsController extends Controller
         return Inertia::render('accounts/index', compact('accounts', 'query'));
     }
 
+
     public function create(AccountCreateRequest $request)
     {
         $validated = $request->validated();
@@ -42,11 +44,45 @@ class AccountsController extends Controller
         DB::beginTransaction();
 
         try {
-            Account::create($validated);
+            $account =  new Account();
+            $account->fill($validated);
+            $account->bought_by = $request->user()->id;
+            $account->save();
 
             DB::commit();
 
             return back()->with('success', 'Account created successfully!');
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return back()->withErrors('Something went wrong. Please try again.');
+        }
+    }
+
+    public function sold(AccountSoldRequest $request, $id)
+    {
+        $validated = $request->validated();
+
+        try {
+            $account = Account::findOrFail($id);
+            $account->fill($validated);
+            $account->sold_by = $request->user()->id;
+            $account->is_sold = true;
+
+            $bought_price = $account->bought_price;
+            $sold_price = $validated['sold_price'];
+
+            if ($sold_price > $bought_price) {
+                $account->profit = $sold_price - $bought_price;
+            } else {
+                $account->loss = $bought_price - $sold_price;
+            }
+
+            $account->save();
+
+            DB::commit();
+
+            return back()->with('success', 'Account Updated successfully!');
         } catch (Exception $e) {
             DB::rollBack();
 

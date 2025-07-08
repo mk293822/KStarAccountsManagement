@@ -104,6 +104,5 @@ export interface AccountCreateForm {
     is_acc_protection_changed: boolean;
     is_email_changed: boolean;
     is_email_disabled: boolean;
-    bought_by: number;
     bought_date: string; // ISO 8601 string, e.g. "2025-07-05T13:15:30"
 }
