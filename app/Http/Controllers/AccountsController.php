@@ -126,7 +126,7 @@ class AccountsController extends Controller
         $account_return = $this->accountService->update($request, $id);
 
         if ($account_return === 200) {
-            return back()->with('success', 'Account Update successfully!');
+            return back()->with('success', 'Account Updated successfully!');
         } else {
             return back()->withErrors('Something went wrong. Please try again.');
         }
@@ -137,6 +137,9 @@ class AccountsController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $account = Account::findOrFail($id);
+        $account->delete();
+
+        return response()->json(['message' => 'Deleted'], 200);
     }
 }

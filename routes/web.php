@@ -20,6 +20,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('accounts/sold/{id}', [AccountsController::class, 'sold'])->name('account.sold');
     Route::post('accounts/return/{id}', [AccountsController::class, 'return'])->name('account.return');
     Route::post('accounts/deposit/{id}', [AccountsController::class, 'deposit'])->name('account.deposit');
+    Route::delete('accounts/destroy/{id}', [AccountsController::class, 'destroy'])->name('account.destroy');
 });
 
 require __DIR__.'/settings.php';

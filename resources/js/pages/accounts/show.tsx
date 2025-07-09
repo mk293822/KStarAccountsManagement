@@ -1,7 +1,8 @@
 import { Flag, Info, InfoRow, SectionCard, SectionHeader } from '@/components/components';
 import AppLayout from '@/layouts/app-layout';
 import { Account, BreadcrumbItem } from '@/types';
-import { Link } from '@inertiajs/react';
+import { Link, router } from '@inertiajs/react';
+import axios, { isAxiosError } from 'axios';
 
 const Show = ({ account }: { account: Account }) => {
     const breadcrumbs: BreadcrumbItem[] = [
@@ -15,17 +16,38 @@ const Show = ({ account }: { account: Account }) => {
         },
     ];
 
+    const handleAccountDelete = async () => {
+        try {
+            await axios.delete(route('account.destroy', account.id));
+            router.visit(route('accounts'));
+        } catch (e) {
+            if (isAxiosError(e)) {
+                console.log(e.response?.statusText);
+            } else {
+                console.log('Unknown error: ', e);
+            }
+        }
+    };
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <div className="mx-auto max-w-4xl space-y-4 rounded-xl bg-zinc-950 p-4 text-gray-200 shadow-md sm:p-6">
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                     <h2 className="text-xl font-semibold text-blue-400 sm:text-2xl">Account Details</h2>
-                    <Link
-                        className="rounded border border-blue-400 bg-transparent px-4 py-0.5 text-white hover:bg-blue-400"
-                        href={route('account.edit', account.id)}
-                    >
-                        Edit
-                    </Link>
+                    <div className="flex flex-row items-center justify-center gap-2">
+                        <Link
+                            className="rounded border border-blue-400 bg-transparent px-4 py-0.5 text-white hover:bg-blue-400"
+                            href={route('account.edit', account.id)}
+                        >
+                            Edit
+                        </Link>
+                        <button
+                            onClick={handleAccountDelete}
+                            className="rounded border border-red-500 bg-transparent px-4 py-0.5 text-white hover:bg-red-500"
+                        >
+                            Delete
+                        </button>
+                    </div>
                 </div>
 
                 {/* Warning for Email Disabled */}
