@@ -80,8 +80,6 @@ export interface ReturnedAccount {
     name: string;
     return_price: number;
     is_password_changed: boolean;
-    created_at: string;
-    updated_at: string;
     sold_price: number;
     returned_date: string;
 }
@@ -96,8 +94,6 @@ export interface DepositAccount {
     cancelled: boolean;
     return_deposit: boolean;
     return_deposit_amount: number;
-    created_at: string;
-    updated_at: string;
 }
 
 export interface AccountCreateForm {
@@ -110,5 +106,5 @@ export interface AccountCreateForm {
     is_acc_protection_changed: boolean;
     is_email_changed: boolean;
     is_email_disabled: boolean;
-    bought_date: string; // ISO 8601 string, e.g. "2025-07-05T13:15:30"
+    bought_date: string;
 }

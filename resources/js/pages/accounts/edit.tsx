@@ -7,11 +7,7 @@ const Edit = ({account}: {account: Account}) => {
     return (
         <AppLayout>
             <div className="w-full">
-                <div className="max-auto max-w-xl">
-                    {Object.entries(account).map(([key, value], index) => (
-                        <InfoRow key={index} label={key} value={value} />
-                    ))}
-                </div>
+                <div className="max-auto max-w-xl">{JSON.stringify(account)}</div>
             </div>
         </AppLayout>
     );
