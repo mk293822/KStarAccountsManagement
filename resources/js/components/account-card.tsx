@@ -7,6 +7,7 @@ import { Link } from '@inertiajs/react';
 import { useState } from 'react';
 import SoldModal from './sold-modal';
 import ReturnModal from './return-modal';
+import DepositModal from './deposit-modal';
 
 type AccountCardProps = {
     account: Account;
@@ -131,6 +132,7 @@ export default function AccountCard({ account, index, onToggle, isOpen }: Accoun
             {/* Modals */}
             <SoldModal show={openSoldModal} onClose={() => setOpenSoldModal(false)} account={account} />
             <ReturnModal show={openReturnModal} onClose={() => setOpenReturnModal(false)} account={account} />
+            <DepositModal show={openDepositModal} onClose={() => setOpenDepositModal(false)} account={account} />
         </>
     );
 }

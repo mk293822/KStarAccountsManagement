@@ -3,14 +3,17 @@
 namespace App\Services;
 
 use App\Http\Requests\AccountCreateRequest;
+use App\Http\Requests\AccountDepositRequest;
 use App\Http\Requests\AccountReturnRequest;
 use App\Http\Requests\AccountSoldRequest;
 use App\Http\Resources\AccountResource;
 use App\Models\Account;
+use App\Models\DepositAccount;
 use App\Models\ReturnedAccount;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use phpDocumentor\Reflection\Types\Boolean;
 
 class AccountService {
@@ -124,12 +127,11 @@ class AccountService {
         try {
             $account = Account::findOrFail($id);
 
-            $return_acc = new ReturnedAccount();
-            $return_acc->fill($validated);
-            $return_acc->name = $account->buyer_name;
-            $return_acc->account_id = $account->id;
-            $return_acc->sold_price = $account->sold_price;
-            $return_acc->save();
+            $account->returnedAccount()->create([
+                ...$validated,
+                'name' => $account->buyer_name,
+                'sold_price' => $account->sold_price,
+            ]);
 
             $account->update([
                 'is_sold' => false,
@@ -139,6 +141,28 @@ class AccountService {
                 'is_returned' => true,
                 'buyer_name' => null
             ]);
+
+            DB::commit();
+
+            return 200;
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return null;
+        }
+    }
+
+    public function deposit(AccountDepositRequest $request, $id)
+    {
+        $validated = $request->validated();
+
+        try {
+            $account = Account::findOrFail($id);
+
+            $account->depositAccount()->create($validated);
+
+            $account->is_deposit = true;
+            $account->save();
 
             DB::commit();
 

@@ -32,8 +32,6 @@ class AccountFactory extends Factory
 
             'bought_price' => $boughtPrice,
             'sold_price' => $soldPrice,
-            'profit' => max(0, $soldPrice - $boughtPrice),
-            'loss' => $soldPrice > 0 && $soldPrice < $boughtPrice ? $boughtPrice - $soldPrice : 0,
 
             'is_acc_protection_changed' => $this->faker->boolean(90),
             'is_sold' => $isSold,

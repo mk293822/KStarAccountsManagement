@@ -112,7 +112,7 @@ const Show = ({ account }: { account: Account }) => {
                         </div>
                         <div className="mt-2 grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <Info label="Sold Price" value={`$${account.returned_account.sold_price}`} />
-                            <Info label="Return By" value={new Date(account.returned_account.returned_date).toLocaleDateString()} />
+                            <Info label="Return Date" value={new Date(account.returned_account.returned_date).toLocaleDateString()} />
                         </div>
                         <div className="mt-2">
                             <Flag label="Password Changed" value={account.returned_account.is_password_changed} />
@@ -127,7 +127,21 @@ const Show = ({ account }: { account: Account }) => {
                             <Info label="Deposit By" value={account.deposit_account.name} />
                             <Info label="Deposit Amount" value={`$${account.deposit_account.deposit_amount}`} />
                         </div>
-                        <div className="mt-2">
+                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                            <Info label="Return Deposit Amount" value={`$${account.deposit_account.return_deposit_amount}`} />
+                            <Info label="Deposited Date" value={new Date(account.deposit_account.deposit_date).toLocaleDateString()} />
+                        </div>
+                        <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-3">
+                            <div
+                                className={`rounded-full px-3 py-1 text-xs font-semibold text-white shadow ${!account.deposit_account.cancelled ? 'bg-green-600' : 'bg-red-600/70 text-gray-300'}`}
+                            >
+                                Cancelled Deposit: {account.deposit_account.cancelled ? 'Yes' : 'No'}
+                            </div>
+                            <div
+                                className={`rounded-full px-3 py-1 text-xs font-semibold text-white shadow ${!account.deposit_account.return_deposit ? 'bg-green-600' : 'bg-red-600/70 text-gray-300'}`}
+                            >
+                                Return Deposit: {account.deposit_account.return_deposit ? 'Yes' : 'No'}
+                            </div>
                             <Flag label="Gave Account" value={!!account.deposit_account.gave_account} />
                         </div>
                     </SectionCard>

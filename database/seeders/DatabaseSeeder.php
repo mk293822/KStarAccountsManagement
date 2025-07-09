@@ -37,11 +37,16 @@ class DatabaseSeeder extends Seeder
             }
 
             if ($account->is_deposit) {
+                $cancelled = fake()->boolean(50);
                 DepositAccount::create([
                     'name' => fake()->name,
                     'account_id' => $account->id,
                     'deposit_amount' => fake()->numberBetween(5000, 20000),
                     'gave_account' => fake()->boolean,
+                    'deposit_date' => today(),
+                    'cancelled' => $cancelled,
+                    'return_deposit' => !$cancelled ? fake()->boolean(50) : false,
+                    'return_deposit_amount' => !$cancelled ? fake()->numberBetween(5000, 20000) : 0,
                 ]);
             }
         });

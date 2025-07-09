@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AccountCreateRequest;
+use App\Http\Requests\AccountDepositRequest;
 use App\Http\Requests\AccountReturnRequest;
 use App\Http\Requests\AccountSoldRequest;
 use App\Http\Resources\AccountResource;
@@ -63,6 +64,17 @@ class AccountsController extends Controller
     public function return(AccountReturnRequest $request, $id)
     {
         $account_return = $this->accountService->return($request, $id);
+
+        if ($account_return === 200) {
+            return back()->with('success', 'Account Return successfully!');
+        } else {
+            return back()->withErrors('Something went wrong. Please try again.');
+        }
+    }
+
+    public function deposit(AccountDepositRequest $request, $id)
+    {
+        $account_return = $this->accountService->deposit($request, $id);
 
         if ($account_return === 200) {
             return back()->with('success', 'Account Return successfully!');

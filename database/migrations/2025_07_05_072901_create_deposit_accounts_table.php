@@ -17,6 +17,10 @@ return new class extends Migration
             $table->string('name')->index();
             $table->unsignedBigInteger('deposit_amount');
             $table->boolean('gave_account')->default(false);
+            $table->date('deposit_date');
+            $table->boolean('cancelled')->default(false);
+            $table->boolean('return_deposit')->default(false);
+            $table->unsignedBigInteger('return_deposit_amount')->default(0);
             $table->timestamps();
         });
     }

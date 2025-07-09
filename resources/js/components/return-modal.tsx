@@ -17,15 +17,15 @@ type Props = {
 };
 
 type ReturnForm = {
-    return_price: number | undefined;
+    return_price: number;
     is_password_changed: boolean;
     returned_date: string;
 };
 
 const ReturnModal = ({ show, onClose, account }: Props) => {
     const { data, setData, post, processing, errors } = useForm<Required<ReturnForm>>({
-        returned_date: '',
-        return_price: undefined,
+        returned_date: new Date().toISOString().split('T')[0],
+        return_price: 50,
         is_password_changed: false,
     });
 

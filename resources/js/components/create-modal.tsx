@@ -19,10 +19,10 @@ const CreateAccount = ({ show, onClose }: Props) => {
     const { data, setData, post, processing, errors } = useForm<Required<AccountCreateForm>>({
         account_name: '',
         account_email: '',
-        th_level: undefined,
+        th_level: 0,
         seller_name: '',
-        bought_price: undefined,
-        bought_date: '',
+        bought_price: 50,
+        bought_date: new Date().toISOString().split('T')[0],
         is_acc_protection_changed: false,
         is_email_changed: false,
         is_email_disabled: false,

@@ -17,15 +17,15 @@ type Props = {
 
 type SoldForm = {
     buyer_name: string;
-    sold_price: number | undefined;
+    sold_price: number;
     sold_date: string;
 };
 
 const SoldModal = ({ show, onClose, account }: Props) => {
     const { data, setData, post, processing, errors } = useForm<Required<SoldForm>>({
         buyer_name: '',
-        sold_price: undefined,
-        sold_date: '',
+        sold_price: 50,
+        sold_date: new Date().toISOString().split('T')[0],
     });
 
     const submit: FormEventHandler = (e) => {
@@ -37,7 +37,7 @@ const SoldModal = ({ show, onClose, account }: Props) => {
     return (
         <Modal show={show} onClose={onClose} closeable={false}>
             <div className="mx-auto w-full max-w-2xl rounded-2xl border border-white/20 bg-white/10 p-6 text-white shadow-xl backdrop-blur-md">
-                <Heading title="Sold Account" description="Enter your details to create a sold account." />
+                <Heading title="Return Account" description="Enter your details to create a return account." />
 
                 <div className="hide-scrollbar grid max-h-[70vh] grid-cols-1 gap-4 overflow-y-auto sm:max-h-[100vh] sm:grid-cols-2">
                     <div className="col-span-2">

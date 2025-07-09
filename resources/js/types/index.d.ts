@@ -92,6 +92,10 @@ export interface DepositAccount {
     name: string;
     deposit_amount: number;
     gave_account: string;
+    deposit_date: string;
+    cancelled: boolean;
+    return_deposit: boolean;
+    return_deposit_amount: number;
     created_at: string;
     updated_at: string;
 }
@@ -100,9 +104,9 @@ export interface AccountCreateForm {
     account_name: string;
     account_email: string;
     seller_name: string;
-    th_level: number | undefined;
+    th_level: number;
 
-    bought_price: number | undefined;
+    bought_price: number;
     is_acc_protection_changed: boolean;
     is_email_changed: boolean;
     is_email_disabled: boolean;

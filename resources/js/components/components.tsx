@@ -44,5 +44,5 @@ export const SectionCard = ({ children, color = 'zinc' }: { children: React.Reac
         zinc: 'border-zinc-700 bg-zinc-900',
     }[color];
 
-    return <div className={`rounded border p-4 ${borderColor}`}>{children}</div>;
+    return <div className={`space-y-2 rounded border p-4 ${borderColor}`}>{children}</div>;
 };
