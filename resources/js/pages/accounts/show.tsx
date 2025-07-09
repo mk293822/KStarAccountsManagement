@@ -15,8 +15,6 @@ const Show = ({ account }: { account: Account }) => {
         },
     ];
 
-    console.log(account);
-
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <div className="mx-auto max-w-4xl space-y-4 rounded-xl bg-zinc-950 p-4 text-gray-200 shadow-md sm:p-6">

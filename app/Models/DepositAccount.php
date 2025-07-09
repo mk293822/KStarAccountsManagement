@@ -18,12 +18,14 @@ class DepositAccount extends Model
         'cancelled',
         'return_deposit',
         'return_deposit_amount',
+        'cancelled_date'
     ];
 
     protected function casts(): array
     {
         return [
-            'deposit_date' => 'date'
+            'deposit_date' => 'date',
+            'cancelled_date' => 'date',
         ];
     }
 

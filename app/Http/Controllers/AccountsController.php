@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AccountCreateRequest;
 use App\Http\Requests\AccountDepositRequest;
+use App\Http\Requests\AccountEditRequest;
 use App\Http\Requests\AccountReturnRequest;
 use App\Http\Requests\AccountSoldRequest;
 use App\Http\Resources\AccountResource;
@@ -32,7 +33,7 @@ class AccountsController extends Controller
     {
         $get_accounts = $this->accountService->getAccounts($request);
 
-        $accounts = AccountResource::collection($get_accounts->paginate(20)->appends($request->query()));
+        $accounts = AccountResource::collection($get_accounts->paginate(25)->appends($request->query()));
         $query = $request->query();
 
         return Inertia::render('accounts/index', compact('accounts', 'query'));
@@ -120,9 +121,15 @@ class AccountsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(AccountEditRequest $request, string $id)
     {
-        //
+        $account_return = $this->accountService->update($request, $id);
+
+        if ($account_return === 200) {
+            return back()->with('success', 'Account Update successfully!');
+        } else {
+            return back()->withErrors('Something went wrong. Please try again.');
+        }
     }
 
     /**

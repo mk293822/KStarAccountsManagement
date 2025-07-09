@@ -25,10 +25,14 @@ type ReturnForm = {
 
 const DepositModal = ({ show, onClose, account }: Props) => {
     const { data, setData, post, processing, errors } = useForm<Required<ReturnForm>>({
-        name: '',
-        deposit_amount: 50,
-        deposit_date: new Date().toISOString().split('T')[0],
-        gave_account: false,
+        name: account.is_deposit && account.deposit_account?.name ? account.deposit_account.name : '',
+        deposit_amount:
+            account.is_deposit && typeof account.deposit_account?.deposit_amount === 'number' ? account.deposit_account.deposit_amount : 0,
+        deposit_date:
+            account.is_deposit && account.deposit_account?.deposit_date
+                ? account.deposit_account.deposit_date
+                : new Date().toISOString().split('T')[0],
+        gave_account: account.is_deposit && typeof account.deposit_account?.gave_account === 'boolean' ? account.deposit_account.gave_account : false,
     });
 
     const submit: FormEventHandler = (e) => {

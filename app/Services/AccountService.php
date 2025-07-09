@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Http\Requests\AccountCreateRequest;
 use App\Http\Requests\AccountDepositRequest;
+use App\Http\Requests\AccountEditRequest;
 use App\Http\Requests\AccountReturnRequest;
 use App\Http\Requests\AccountSoldRequest;
 use App\Http\Resources\AccountResource;
@@ -101,6 +102,7 @@ class AccountService {
     public function sold(AccountSoldRequest $request, $id)
     {
         $validated = $request->validated();
+        DB::beginTransaction();
 
         try {
             $account = Account::findOrFail($id);
@@ -123,6 +125,7 @@ class AccountService {
     public function return(AccountReturnRequest $request, $id)
     {
         $validated = $request->validated();
+        DB::beginTransaction();
 
         try {
             $account = Account::findOrFail($id);
@@ -155,6 +158,7 @@ class AccountService {
     public function deposit(AccountDepositRequest $request, $id)
     {
         $validated = $request->validated();
+        DB::beginTransaction();
 
         try {
             $account = Account::findOrFail($id);
@@ -162,6 +166,38 @@ class AccountService {
             $account->depositAccount()->create($validated);
 
             $account->is_deposit = true;
+            $account->save();
+
+            DB::commit();
+
+            return 200;
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return null;
+        }
+    }
+
+    public function update(AccountEditRequest $request, $id)
+    {
+        $validated = $request->validated();
+        DB::beginTransaction();
+
+        try {
+            $account = Account::findOrFail($id);
+
+            $account->fill($validated);
+            if ($account->isDirty('is_sold')) {
+                if ($validated['is_sold']) {
+                    $account->sold_by = $request->user()->id;
+                } else {
+                    $account->sold_by = null;
+                    $account->sold_price = 0;
+                    $account->buyer_name = null;
+                    $account->sold_date = null;
+                }
+            }
+
             $account->save();
 
             DB::commit();

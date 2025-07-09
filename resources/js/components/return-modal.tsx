@@ -24,9 +24,13 @@ type ReturnForm = {
 
 const ReturnModal = ({ show, onClose, account }: Props) => {
     const { data, setData, post, processing, errors } = useForm<Required<ReturnForm>>({
-        returned_date: new Date().toISOString().split('T')[0],
-        return_price: 50,
-        is_password_changed: false,
+        returned_date:
+            account.is_returned && account.returned_account?.returned_date
+                ? account.returned_account.returned_date
+                : new Date().toISOString().split('T')[0],
+        return_price: account.is_returned && account.returned_account?.return_price ? account.returned_account.return_price : 0,
+        is_password_changed:
+            account.is_returned && account.returned_account?.is_password_changed ? account.returned_account.is_password_changed : false,
     });
 
     const submit: FormEventHandler = (e) => {

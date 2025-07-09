@@ -38,8 +38,8 @@ class AccountResource extends JsonResource
             'bought_by' => $this->boughtBy->name,
             'sold_by' => $this->soldBy?->name,
 
-            'bought_date' => $this->bought_date?->toDateTimeString(),
-            'sold_date' => $this->sold_date?->toDateTimeString(),
+            'bought_date' => $this->bought_date?->toDateString(),
+            'sold_date' => $this->sold_date?->toDateString(),
 
             'returned_account' => new ReturnedAccountResource($this->whenLoaded('returnedAccount')),
             'deposit_account' => new DepositAccountResource($this->whenLoaded('depositAccount')),

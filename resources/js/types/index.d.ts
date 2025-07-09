@@ -49,7 +49,7 @@ export interface Account {
     account_name: string;
     account_email: string;
     seller_name: string;
-    buyer_name?: string | null;
+    buyer_name?: string;
     th_level: number;
 
     bought_price: number;
@@ -64,11 +64,11 @@ export interface Account {
     is_returned?: boolean;
     is_deposit?: boolean;
 
-    sold_by?: string | null;
+    sold_by?: string;
     bought_by: string;
 
     bought_date: string; // ISO 8601 string, e.g. "2025-07-05T13:15:30"
-    sold_date?: string | null;
+    sold_date?: string;
 
     returned_account?: ReturnedAccount;
     deposit_account?: DepositAccount;
