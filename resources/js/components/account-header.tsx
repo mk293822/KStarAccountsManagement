@@ -6,6 +6,9 @@ import { router, usePage } from '@inertiajs/react';
 import { cn } from '@/lib/utils';
 import { Account } from '@/types';
 import CreateAccount from './create-modal';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { Label } from './ui/label';
+import FilteringOrderingModal from './filtering-ordering-modal';
 
 type Props = {
     openIndexes: Set<number>;
@@ -28,19 +31,20 @@ type QueryProps = {
 const AccountHeader = ({ openIndexes, accounts, setOpenIndexes, page }: Props) => {
     const { query } = usePage<QueryProps>().props;
 
-    const { searchQuery: query_prop = '', sort_by = '', filter_by = '', order_by = '', filter_value = '' } = query || {};
+    const { searchQuery: query_prop = '', sort_by = '', filter_by = '', order_by = 'desc', filter_value = '' } = query || {};
     const [showCreateAccount, setShowCreateAccount] = useState(false);
+    const [showFilterOrderModal, setShowFilterOrderModal] = useState(false);
 
     const [searchQuery, setSearchQuery] = useState('');
     const [filterBy, setFilterBy] = useState('');
     const [sortBy, setSortBy] = useState('');
-    const [orderBy, setOrderBy] = useState('');
+    const [orderBy, setOrderBy] = useState('desc');
     const [filterValue, setFilterValue] = useState('');
 
     useEffect(() => {
         setSearchQuery(query_prop);
         setSortBy(sort_by);
-        setOrderBy(order_by);
+        setOrderBy(order_by ?? 'desc');
         setFilterBy(filter_by);
         setFilterValue(filter_value);
     }, [query_prop, sort_by, order_by, filter_by, filter_value]);
@@ -99,109 +103,122 @@ const AccountHeader = ({ openIndexes, accounts, setOpenIndexes, page }: Props) =
                 </div>
 
                 <div className="mt-2 flex flex-row items-center justify-between">
-                    {/* Filtering and orderings. */}
-                    <div className="flex flex-wrap items-end gap-4">
+                    <div className="hidden lg:flex lg:flex-row lg:flex-nowrap lg:gap-2">
                         {/* Filter Field */}
                         <div className="flex w-[160px] flex-col text-sm text-gray-300">
-                            <label htmlFor="filterBy" className="mb-1">
+                            <Label htmlFor="filterBy" className="mb-1">
                                 Filter Field
-                            </label>
-                            <select
-                                id="filterBy"
-                                value={filterBy}
-                                onChange={(e) => setFilterBy(e.target.value)}
-                                className="rounded-md bg-zinc-800 px-3 py-2 text-gray-200 focus:ring focus:ring-blue-500 focus:outline-none"
-                            >
-                                <option value="">Select Field</option>
-                                <option value="is_acc_protection_changed">Protection Changed</option>
-                                <option value="is_sold">Sold</option>
-                                <option value="is_email_changed">Email Changed</option>
-                                <option value="is_email_disabled">Email Disabled</option>
-                                <option value="is_returned">Returned</option>
-                                <option value="is_deposit">Deposit</option>
-                            </select>
+                            </Label>
+                            <Select value={filterBy} onValueChange={setFilterBy}>
+                                <SelectTrigger id="filterBy" className="bg-zinc-800 text-gray-200">
+                                    <SelectValue placeholder="Select Field" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="is_acc_protection_changed">Acc Prt Changed</SelectItem>
+                                    <SelectItem value="is_sold">Sold</SelectItem>
+                                    <SelectItem value="is_email_changed">Email Changed</SelectItem>
+                                    <SelectItem value="is_email_disabled">Email Disabled</SelectItem>
+                                    <SelectItem value="is_returned">Returned</SelectItem>
+                                    <SelectItem value="is_deposit">Deposit</SelectItem>
+                                </SelectContent>
+                            </Select>
                         </div>
 
                         {/* Filter Value */}
                         {filterBy && (
                             <div className="flex w-[140px] flex-col text-sm text-gray-300">
-                                <label htmlFor="filterValue" className="mb-1">
+                                <Label htmlFor="filterValue" className="mb-1">
                                     Filter Value
-                                </label>
-                                <select
-                                    id="filterValue"
-                                    value={filterValue}
-                                    onChange={(e) => setFilterValue(e.target.value)}
-                                    className="rounded-md bg-zinc-800 px-3 py-2 text-gray-200 focus:ring focus:ring-blue-500 focus:outline-none"
-                                >
-                                    <option value="">Select Value</option>
-                                    <option value="true">Yes</option>
-                                    <option value="false">No</option>
-                                </select>
+                                </Label>
+                                <Select value={filterValue} onValueChange={setFilterValue}>
+                                    <SelectTrigger id="filterValue" className="bg-zinc-800 text-gray-200">
+                                        <SelectValue placeholder="Select Value" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="true">Yes</SelectItem>
+                                        <SelectItem value="false">No</SelectItem>
+                                    </SelectContent>
+                                </Select>
                             </div>
                         )}
 
-                        {/* Sort Field */}
+                        {/* Sort By */}
                         <div className="flex w-[160px] flex-col text-sm text-gray-300">
-                            <label htmlFor="sortBy" className="mb-1">
+                            <Label htmlFor="sortBy" className="mb-1">
                                 Sort By
-                            </label>
-                            <select
-                                id="sortBy"
-                                value={sortBy}
-                                onChange={(e) => setSortBy(e.target.value)}
-                                className="rounded-md bg-zinc-800 px-3 py-2 text-gray-200 focus:ring focus:ring-blue-500 focus:outline-none"
-                            >
-                                <option value="">None</option>
-                                <option value="th_level">TH Level</option>
-                                <option value="bought_date">Bought Date</option>
-                                <option value="sold_date">Sold Date</option>
-                                <option value="bought_price">Bought Price</option>
-                                <option value="sold_price">Sold Price</option>
-                                <option value="profit">Profit</option>
-                                <option value="loss">Loss</option>
-                            </select>
+                            </Label>
+                            <Select value={sortBy} onValueChange={setSortBy}>
+                                <SelectTrigger id="sortBy" className="bg-zinc-800 text-gray-200">
+                                    <SelectValue placeholder="None" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="th_level">TH Level</SelectItem>
+                                    <SelectItem value="bought_date">Bought Date</SelectItem>
+                                    <SelectItem value="sold_date">Sold Date</SelectItem>
+                                    <SelectItem value="bought_price">Bought Price</SelectItem>
+                                    <SelectItem value="sold_price">Sold Price</SelectItem>
+                                    <SelectItem value="profit">Profit</SelectItem>
+                                    <SelectItem value="loss">Loss</SelectItem>
+                                </SelectContent>
+                            </Select>
                         </div>
 
-                        {/* Order Field */}
+                        {/* Order */}
                         <div className="flex w-[120px] flex-col text-sm text-gray-300">
-                            <label htmlFor="orderBy" className="mb-1">
+                            <Label htmlFor="orderBy" className="mb-1">
                                 Order
-                            </label>
-                            <select
-                                id="orderBy"
-                                value={orderBy}
-                                onChange={(e) => setOrderBy(e.target.value)}
-                                className="rounded-md bg-zinc-800 px-3 py-2 text-gray-200 focus:ring focus:ring-blue-500 focus:outline-none"
-                            >
-                                <option value="desc">Descending</option>
-                                <option value="asc">Ascending</option>
-                            </select>
-                        </div>
-
-                        {/* Collapse Button */}
-                        <div className="ml-auto">
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                className="flex items-center gap-1 rounded-md bg-zinc-800 text-sm text-gray-300 hover:bg-zinc-700"
-                                onClick={collapseAll}
-                            >
-                                {openIndexes.size === 0 ? 'Open All' : 'Collapse All'}
-                                <ChevronDown className={cn('h-4 w-4 transition-transform', openIndexes.size !== 0 && 'rotate-180')} />
-                            </Button>
+                            </Label>
+                            <Select value={orderBy} onValueChange={setOrderBy}>
+                                <SelectTrigger id="orderBy" className="bg-zinc-800 text-gray-200">
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="desc">Descending</SelectItem>
+                                    <SelectItem value="asc">Ascending</SelectItem>
+                                </SelectContent>
+                            </Select>
                         </div>
                     </div>
 
-                    {/* create button */}
-                    <Button className="mt-6" onClick={() => setShowCreateAccount(!showCreateAccount)} variant={'secondary'}>
-                        Create New Account
-                    </Button>
+                    <div className="block lg:hidden">
+                        <Button onClick={() => setShowFilterOrderModal(!showFilterOrderModal)} size={'sm'} variant={'secondary'}>
+                            Filter and Order
+                        </Button>
+                    </div>
+
+                    <div className="flex flex-row items-center justify-center gap-2 lg:mt-4">
+                        {/* Collapse All Button */}
+                        <Button
+                            variant="outline"
+                            size={'sm'}
+                            className="flex items-center gap-1 rounded-md bg-zinc-800 text-sm text-gray-300 hover:bg-zinc-700"
+                            onClick={collapseAll}
+                        >
+                            {openIndexes.size === 0 ? 'Open All' : 'Collapse All'}
+                            <ChevronDown className={cn('h-4 w-4 transition-transform', openIndexes.size !== 0 && 'rotate-180')} />
+                        </Button>
+                        {/* Create New Account Button */}
+                        <Button size={'sm'} onClick={() => setShowCreateAccount(!showCreateAccount)} variant={'secondary'}>
+                            Create Account
+                        </Button>
+                    </div>
                 </div>
             </div>
 
-            {/* Account Creation Modal */}
+            {/* Create Modal */}
             <CreateAccount show={showCreateAccount} onClose={() => setShowCreateAccount(false)} />
+            <FilteringOrderingModal
+                show={showFilterOrderModal}
+                onClose={() => setShowFilterOrderModal(false)}
+                filterBy={filterBy}
+                setFilterBy={setFilterBy}
+                filterValue={filterValue}
+                setFilterValue={setFilterValue}
+                sortBy={sortBy}
+                setSortBy={setSortBy}
+                orderBy={orderBy}
+                setOrderBy={setOrderBy}
+            />
         </>
     );
 };
