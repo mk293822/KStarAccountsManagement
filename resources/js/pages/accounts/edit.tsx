@@ -217,7 +217,7 @@ const Edit = ({ account }: Props) => {
                             {/* Statuses */}
                             <section>
                                 <h2 className="mb-2 text-lg font-semibold text-muted-foreground">Account Status</h2>
-                                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
+                                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
                                     <div className="flex items-center space-x-2">
                                         <Checkbox
                                             id="is_email_changed"
@@ -248,6 +248,26 @@ const Edit = ({ account }: Props) => {
                                     <div className="flex items-center space-x-2">
                                         <Checkbox id="is_sold" checked={data.is_sold} onClick={() => setData('is_sold', !data.is_sold)} />
                                         <Label htmlFor="is_sold">Sold Out</Label>
+                                    </div>
+
+                                    <div className="flex items-center space-x-2">
+                                        <Checkbox
+                                            id="is_deposit"
+                                            disabled
+                                            checked={data.is_deposit}
+                                            onClick={() => setData('is_deposit', !data.is_deposit)}
+                                        />
+                                        <Label htmlFor="is_deposit">Deposit</Label>
+                                    </div>
+
+                                    <div className="flex items-center space-x-2">
+                                        <Checkbox
+                                            id="is_returned"
+                                            disabled
+                                            checked={data.is_returned}
+                                            onClick={() => setData('is_returned', !data.is_returned)}
+                                        />
+                                        <Label htmlFor="is_returned">Returned</Label>
                                     </div>
                                 </div>
                             </section>
