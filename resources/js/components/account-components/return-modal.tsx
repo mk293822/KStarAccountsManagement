@@ -2,13 +2,13 @@ import { Account } from '@/types';
 import { useForm } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
 import { FormEventHandler } from 'react';
-import Heading from './heading';
-import InputError from './input-error';
-import { Button } from './ui/button';
-import { Checkbox } from './ui/checkbox';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
-import Modal from './ui/modal';
+import Heading from '../heading';
+import InputError from '../input-error';
+import { Button } from '../ui/button';
+import { Checkbox } from '../ui/checkbox';
+import { Input } from '../ui/input';
+import { Label } from '../ui/label';
+import Modal from '../ui/modal';
 
 type Props = {
     show: boolean;

@@ -1,4 +1,4 @@
-import { Flag, Info, InfoRow, SectionCard, SectionHeader } from '@/components/components';
+import { Flag, Info, InfoRow, SectionCard, SectionHeader } from '@/components/custom-components';
 import AppLayout from '@/layouts/app-layout';
 import { Account, BreadcrumbItem } from '@/types';
 import { Link, router } from '@inertiajs/react';

@@ -4,7 +4,7 @@ import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
 import { LayoutGrid, Table2Icon } from 'lucide-react';
 import AppLogo from './app-logo';
-import { NavUser } from './nav-user';
+import { NavUser } from '../nav-user';
 
 const mainNavItems: NavItem[] = [
     {

@@ -3,10 +3,11 @@
 use App\Http\Controllers\AccountsController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
+
+Route::redirect('/', 'dashboard');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     // Accounts
     Route::get('accounts', [AccountsController::class, 'index'])->name('accounts');
     Route::get('accounts/{id}', [AccountsController::class, 'show'])->name('account.show');

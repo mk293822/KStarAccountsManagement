@@ -2,7 +2,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { cn } from '@/lib/utils';
 import type { Account } from '@/types';
 import { ChevronDown } from 'lucide-react';
-import { InfoRow } from './components';
+import { InfoRow } from '../custom-components';
 import { Link } from '@inertiajs/react';
 import { useState } from 'react';
 import SoldModal from './sold-modal';

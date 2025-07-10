@@ -1,13 +1,13 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
-import { Button } from './ui/button';
 import { ChevronDown, Search } from 'lucide-react';
 import { useDebouncedValue } from '@/hooks/use-debounce';
 import { router, usePage } from '@inertiajs/react';
 import { cn } from '@/lib/utils';
 import { Account } from '@/types';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { Label } from '../ui/label';
+import { Button } from '../ui/button';
 import CreateAccount from './create-modal';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { Label } from './ui/label';
 import FilteringOrderingModal from './filtering-ordering-modal';
 
 type Props = {

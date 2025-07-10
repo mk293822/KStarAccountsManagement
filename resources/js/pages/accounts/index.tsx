@@ -1,5 +1,5 @@
-import AccountCard from '@/components/account-card';
-import AccountHeader from '@/components/account-header';
+import AccountCard from '@/components/account-components/account-card';
+import AccountHeader from '@/components/account-components/account-header';
 import AppLayout from '@/layouts/app-layout';
 import { cn } from '@/lib/utils';
 import { Account, BreadcrumbItem } from '@/types';

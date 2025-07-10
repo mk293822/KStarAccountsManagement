@@ -1,7 +1,7 @@
 import React, { Dispatch } from 'react';
-import { Label } from './ui/label';
-import Modal from './ui/modal';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { Label } from '../ui/label';
+import Modal from '../ui/modal';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 
 type Props = {
     show: boolean;

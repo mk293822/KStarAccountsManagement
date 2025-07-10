@@ -1,7 +1,7 @@
-import DepositModal from '@/components/deposit-modal';
+import DepositModal from '@/components/account-components/deposit-modal';
+import ReturnModal from '@/components/account-components/return-modal';
 import Heading from '@/components/heading';
 import InputError from '@/components/input-error';
-import ReturnModal from '@/components/return-modal';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';

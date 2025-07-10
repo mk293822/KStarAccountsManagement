@@ -2,13 +2,12 @@ import { Account } from '@/types';
 import { useForm } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
 import { FormEventHandler } from 'react';
-import Heading from './heading';
-import InputError from './input-error';
-import { Button } from './ui/button';
-import { Checkbox } from './ui/checkbox';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
-import Modal from './ui/modal';
+import Heading from '../heading';
+import InputError from '../input-error';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { Label } from '../ui/label';
+import Modal from '../ui/modal';
 
 type Props = {
     show: boolean;
@@ -16,35 +15,29 @@ type Props = {
     account: Account;
 };
 
-type ReturnForm = {
-    name: string;
-    deposit_amount: number;
-    deposit_date: string;
-    gave_account: boolean;
+type SoldForm = {
+    buyer_name: string;
+    sold_price: number;
+    sold_date: string;
 };
 
-const DepositModal = ({ show, onClose, account }: Props) => {
-    const { data, setData, post, processing, errors } = useForm<Required<ReturnForm>>({
-        name: account.is_deposit && account.deposit_account?.name ? account.deposit_account.name : '',
-        deposit_amount:
-            account.is_deposit && typeof account.deposit_account?.deposit_amount === 'number' ? account.deposit_account.deposit_amount : 0,
-        deposit_date:
-            account.is_deposit && account.deposit_account?.deposit_date
-                ? account.deposit_account.deposit_date
-                : new Date().toISOString().split('T')[0],
-        gave_account: account.is_deposit && typeof account.deposit_account?.gave_account === 'boolean' ? account.deposit_account.gave_account : false,
+const SoldModal = ({ show, onClose, account }: Props) => {
+    const { data, setData, post, processing, errors } = useForm<Required<SoldForm>>({
+        buyer_name: '',
+        sold_price: 50,
+        sold_date: new Date().toISOString().split('T')[0],
     });
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post(route('account.deposit', account.id));
+        post(route('account.sold', account.id));
         onClose();
     };
 
     return (
         <Modal show={show} onClose={onClose} closeable={false}>
             <div className="mx-auto w-full max-w-2xl rounded-2xl border border-white/20 bg-white/10 p-6 text-white shadow-xl backdrop-blur-md">
-                <Heading title="Deposit Account" description="Enter your details to create a deposit account." />
+                <Heading title="Return Account" description="Enter your details to create a return account." />
 
                 <div className="hide-scrollbar grid max-h-[70vh] grid-cols-1 gap-4 overflow-y-auto sm:max-h-[100vh] sm:grid-cols-2">
                     <div className="col-span-2">
@@ -70,55 +63,46 @@ const DepositModal = ({ show, onClose, account }: Props) => {
                 </div>
 
                 <form className="mt-2 grid grid-cols-1 gap-4 sm:grid-cols-2" onSubmit={submit}>
-                    <div>
-                        <Label htmlFor="name">Name</Label>
+                    <div className="col-span-2">
+                        <Label htmlFor="buyer_name">Buyer Name</Label>
                         <Input
-                            id="name"
-                            type="text"
+                            id="buyer_name"
                             className="border-gray-200"
-                            placeholder="Name"
+                            placeholder="Buyer Name"
                             required
-                            value={data.name}
-                            onChange={(e) => setData('name', e.target.value)}
+                            autoComplete="buyer_name"
+                            value={data.buyer_name}
+                            onChange={(e) => setData('buyer_name', e.target.value)}
                         />
-                        <InputError message={errors.name} />
+                        <InputError message={errors.buyer_name} />
                     </div>
+
                     <div>
-                        <Label htmlFor="deposit_amount">Deposit Amount</Label>
+                        <Label htmlFor="sold_price">Sold Price</Label>
                         <Input
-                            id="deposit_amount"
+                            id="sold_price"
                             type="number"
                             className="border-gray-200"
-                            placeholder="Deposit Amount"
+                            placeholder="Sold Price"
                             required
                             min={50}
-                            value={data.deposit_amount}
-                            onChange={(e) => setData('deposit_amount', Number(e.target.value))}
+                            value={data.sold_price}
+                            onChange={(e) => setData('sold_price', Number(e.target.value))}
                         />
-                        <InputError message={errors.deposit_amount} />
+                        <InputError message={errors.sold_price} />
                     </div>
 
                     <div>
-                        <Label htmlFor="deposit_date">Deposit Date</Label>
+                        <Label htmlFor="sold_date">Sold Date</Label>
                         <Input
                             className="border-gray-200"
-                            id="deposit_date"
+                            id="sold_date"
                             type="date"
                             required
-                            value={data.deposit_date}
-                            onChange={(e) => setData('deposit_date', e.target.value)}
+                            value={data.sold_date}
+                            onChange={(e) => setData('sold_date', e.target.value)}
                         />
-                        <InputError message={errors.deposit_date} />
-                    </div>
-
-                    <div className="flex items-center space-x-2">
-                        <Checkbox
-                            className="border-gray-200"
-                            id="gave_account"
-                            checked={data.gave_account}
-                            onClick={() => setData('gave_account', !data.gave_account)}
-                        />
-                        <Label htmlFor="gave_account">Account is Given</Label>
+                        <InputError message={errors.sold_date} />
                     </div>
 
                     <div className="col-span-2 flex justify-end gap-4 pt-8">
@@ -136,4 +120,4 @@ const DepositModal = ({ show, onClose, account }: Props) => {
     );
 };
 
-export default DepositModal;
+export default SoldModal;
