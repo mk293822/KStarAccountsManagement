@@ -10,15 +10,17 @@ use function PHPUnit\Framework\isEmpty;
 class DashboardService
 {
 
-    public function getChartData($period)
+    public function getAccounts($period)
     {
         $query = Account::query();
 
         $left_accounts = $query->where('is_sold', false)
-            ->get(['id', 'bought_date'])
+            ->get(['id', 'bought_date', 'bought_price', 'sold_price'])
             ->map(fn($acc) => [
                 'id' => $acc->id,
                 'bought_date' => $acc->bought_date->toDateString(),
+            'bought_price' => $acc->bought_price,
+            'sold_price' => $acc->sold_price
             ])
             ->toArray();
 
@@ -34,7 +36,12 @@ class DashboardService
             );
         }
 
-        $bought_accounts = (clone $accountsQuery)->get(['id', 'bought_date'])->map(fn($acc) =>  ['id' => $acc->id, 'bought_date' => $acc->bought_date->toDateString()]);
+        $bought_accounts = (clone $accountsQuery)->get(['id', 'bought_date', 'bought_price', 'sold_price'])->map(fn($acc) =>  [
+            'id' => $acc->id,
+            'bought_date' => $acc->bought_date->toDateString(),
+            'bought_price' => $acc->bought_price,
+            'sold_price' => $acc->sold_price
+        ])->toArray();
 
         $conditions = [
             'sold_accounts' => ['is_sold', true],
@@ -50,9 +57,13 @@ class DashboardService
         foreach ($conditions as $key => [$field, $value]) {
             $data[$key] = (clone $accountsQuery)
                 ->where($field, $value)
-                ->get(['id', 'bought_date'])
-                ->map(fn($acc) => ['id' => $acc->id, 'bought_date' => $acc->bought_date->toDateString()])
-                ->toArray();
+                ->get(['id', 'bought_date', 'sold_price', 'bought_price'])
+                ->map(fn($acc) =>  [
+                    'id' => $acc->id,
+                    'bought_date' => $acc->bought_date->toDateString(),
+                    'bought_price' => $acc->bought_price,
+                    'sold_price' => $acc->sold_price
+                ])->toArray();
         }
 
         return [

@@ -1,18 +1,18 @@
-import { ChartData } from '@/types';
+import { DashboardAccount } from '@/types';
 import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 type Props = {
-    bought_accounts: ChartData[];
-    sold_accounts: ChartData[];
+    bought_accounts: DashboardAccount[];
+    sold_accounts: DashboardAccount[];
     mode: 'daily' | 'monthly' | 'all';
 };
 
-type ChartDatas = { date: string | number; bought: number; sold: number };
+type ChartData = { date: string | number; bought: number; sold: number };
 
 const AccountChart = ({ bought_accounts, sold_accounts, mode }: Props) => {
     const getMonthShortName = (dateStr: string) => new Date(dateStr).toLocaleString('en-US', { month: 'short' });
 
-    const generateInitialData = (): ChartDatas[] => {
+    const generateInitialData = (): ChartData[] => {
         if (mode === 'monthly') {
             const months = Array.from({ length: 12 }, (_, i) => new Date(2000, i, 1).toLocaleString('en-US', { month: 'short' }));
             return months.map((month) => ({ date: month, bought: 0, sold: 0 }));
@@ -32,7 +32,6 @@ const AccountChart = ({ bought_accounts, sold_accounts, mode }: Props) => {
             }));
         }
     };
-    console.log(bought_accounts);
 
     const datas = generateInitialData();
 

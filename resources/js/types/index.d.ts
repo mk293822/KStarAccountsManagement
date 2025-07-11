@@ -109,18 +109,20 @@ export interface AccountCreateForm {
     bought_date: string;
 }
 
-export interface ChartData {
+export interface DashboardAccount {
     id: number;
     bought_date: string;
+    bought_price: number;
+    sold_price: number;
 }
 
-export interface ChartDatas {
-    left_accounts: ChartData[];
-    sold_accounts: ChartData[];
-    deposit_accounts: ChartData[];
-    returned_accounts: ChartData[];
-    mail_disabled_accounts: ChartData[];
-    unchanged_acc_protection_accounts: ChartData[];
-    unchanged_email_accounts: ChartData[];
-    bought_accounts: ChartData[];
+export interface DashboardAccounts {
+    left_accounts: DashboardAccount[];
+    sold_accounts: DashboardAccount[];
+    deposit_accounts: DashboardAccount[];
+    returned_accounts: DashboardAccount[];
+    mail_disabled_accounts: DashboardAccount[];
+    unchanged_acc_protection_accounts: DashboardAccount[];
+    unchanged_email_accounts: DashboardAccount[];
+    bought_accounts: DashboardAccount[];
 }

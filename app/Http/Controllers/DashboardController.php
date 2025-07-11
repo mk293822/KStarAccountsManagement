@@ -21,8 +21,8 @@ class DashboardController extends Controller
     public function index(Request $request)
     {
         $period = $request->input('period', 'daily');
-        $chartDatas = $this->dashboardService->getChartData($period);
+        $accounts = $this->dashboardService->getAccounts($period);
 
-        return Inertia::render('dashboard', compact('chartDatas', 'period'));
+        return Inertia::render('dashboard', compact('accounts', 'period'));
     }
 }

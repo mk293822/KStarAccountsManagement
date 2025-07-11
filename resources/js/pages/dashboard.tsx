@@ -1,7 +1,8 @@
 import AccountChart from '@/components/dashboard-components/account-chart';
+import StatCard from '@/components/dashboard-components/status-card';
 import { Button } from '@/components/ui/button'; // You can replace with your button if not using shadcn/ui
 import AppLayout from '@/layouts/app-layout';
-import { ChartDatas, type BreadcrumbItem } from '@/types';
+import { DashboardAccounts, type BreadcrumbItem } from '@/types';
 import { Head, router } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 
@@ -9,11 +10,11 @@ import { useEffect, useState } from 'react';
 const breadcrumbs: BreadcrumbItem[] = [{ title: 'Dashboard', href: '/dashboard' }];
 
 type Props = {
-    chartDatas: ChartDatas;
+    accounts: DashboardAccounts;
     period: 'daily' | 'monthly' | 'all';
 };
 
-const Dashboard = ({ chartDatas, period }: Props) => {
+const Dashboard = ({ accounts, period }: Props) => {
     const [mode, setMode] = useState<'daily' | 'monthly' | 'all'>(period);
 
     useEffect(() => setMode(period), [period]);
@@ -27,6 +28,8 @@ const Dashboard = ({ chartDatas, period }: Props) => {
             { preserveScroll: true, preserveState: true, replace: true },
         );
     }, [mode]);
+
+    console.log(accounts.sold_accounts);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -49,16 +52,31 @@ const Dashboard = ({ chartDatas, period }: Props) => {
                 </div>
                 {/* Stat cards */}
                 <div className="grid gap-4 md:grid-cols-3">
-                    <StatCard title="Left Accounts" value={chartDatas.left_accounts.length} />
-                    <StatCard title="Bought Accounts" value={chartDatas.bought_accounts.length} />
-                    <StatCard title="Sold Accounts" value={chartDatas.sold_accounts.length} />
-                    <StatCard title="Acc Protection Unchanged Accounts" value={chartDatas.unchanged_acc_protection_accounts.length} />
-                    <StatCard title="Email Unchanged Accounts" value={chartDatas.unchanged_email_accounts.length} />
-                    <StatCard title="Email Disabled Accounts" value={chartDatas.mail_disabled_accounts.length} />
+                    <StatCard
+                        title="Left Accounts"
+                        value={accounts.left_accounts.length}
+                        price={accounts.left_accounts.reduce((sum, acc) => sum + (acc.bought_price || 0), 0)}
+                        priceLabel="Total Bought Price"
+                    />
+                    <StatCard
+                        title="Bought Accounts"
+                        priceLabel="Total Bought Price"
+                        value={accounts.bought_accounts.length}
+                        price={accounts.bought_accounts.reduce((sum, acc) => sum + (acc.bought_price || 0), 0)}
+                    />
+                    <StatCard
+                        title="Sold Accounts"
+                        priceLabel="Total Sold Price"
+                        value={accounts.sold_accounts.length}
+                        price={accounts.sold_accounts.reduce((sum, acc) => sum + (acc.sold_price || 0), 0)}
+                    />
+                    <StatCard title="Acc Protection Unchanged Accounts" value={accounts.unchanged_acc_protection_accounts.length} />
+                    <StatCard title="Email Unchanged Accounts" value={accounts.unchanged_email_accounts.length} />
+                    <StatCard title="Email Disabled Accounts" value={accounts.mail_disabled_accounts.length} />
                 </div>
 
                 {/* Chart */}
-                <AccountChart bought_accounts={chartDatas.bought_accounts} sold_accounts={chartDatas.sold_accounts} mode={mode} />
+                <AccountChart bought_accounts={accounts.bought_accounts} sold_accounts={accounts.sold_accounts} mode={mode} />
             </div>
         </AppLayout>
     );
@@ -66,12 +84,3 @@ const Dashboard = ({ chartDatas, period }: Props) => {
 
 export default Dashboard;
 
-// Typed StatCard Component
-const StatCard = ({ title, value }: { title: string; value: number }) => {
-    return (
-        <div className="rounded-lg border border-border bg-muted/40 px-4 py-3 shadow-sm">
-            <div className="text-sm text-muted-foreground">{title}</div>
-            <div className="text-xl font-semibold text-foreground">{value.toLocaleString()}</div>
-        </div>
-    );
-};
