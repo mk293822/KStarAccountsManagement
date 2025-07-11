@@ -19,34 +19,40 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         User::factory()->create([
-            'name' => 'minkhant',
+            'name' => 'Min Khant Thaw',
             'email' => 'mkt293822@gmail.com',
+        ]);
+        User::factory()->create([
+            'name' => 'Zaw Naing Linn',
+            'email' => 'zaw203929@gmail.com',
         ]);
 
 
-        Account::factory()->count(50)->create()->each(function ($account) {
+        Account::factory()->count(400)->create()->each(function ($account) {
             if ($account->is_returned) {
                 ReturnedAccount::create([
                     'name' => fake()->name,
                     'account_id' => $account->id,
-                    'return_price' => fake()->numberBetween(10000, 300000),
+                    'return_price' => fake()->numberBetween(5000, min(300000, $account->sold_price ?: 300000)),
                     'is_password_changed' => fake()->boolean(90),
                     'sold_price' => $account->sold_price,
-                    'returned_date' => today(),
+                    'returned_date' => $account->sold_date ?? now(),
                 ]);
             }
 
             if ($account->is_deposit) {
                 $cancelled = fake()->boolean(50);
+                $returnDeposit = !$cancelled && fake()->boolean(50);
+
                 DepositAccount::create([
                     'name' => fake()->name,
                     'account_id' => $account->id,
-                    'deposit_amount' => fake()->numberBetween(5000, 20000),
-                    'gave_account' => fake()->boolean,
-                    'deposit_date' => today(),
+                    'deposit_amount' => $deposit = fake()->numberBetween(5000, 20000),
+                    'gave_account' => fake()->boolean(),
+                    'deposit_date' => $account->bought_date,
                     'cancelled' => $cancelled,
-                    'return_deposit' => !$cancelled ? fake()->boolean(50) : false,
-                    'return_deposit_amount' => !$cancelled ? fake()->numberBetween(5000, 20000) : 0,
+                    'return_deposit' => $returnDeposit,
+                    'return_deposit_amount' => $returnDeposit ? fake()->numberBetween(1000, $deposit) : 0,
                 ]);
             }
         });

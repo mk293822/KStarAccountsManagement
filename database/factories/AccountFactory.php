@@ -19,8 +19,17 @@ class AccountFactory extends Factory
     {
         $boughtPrice = $this->faker->numberBetween(10000, 300000);
         $isSold = $this->faker->boolean(50);
-        $soldPrice = $isSold ? $this->faker->numberBetween(10000, 40000) : 0;
-        $boughtDate = Carbon::now()->subDays(rand(0, 30));
+        $boughtDate = Carbon::now()->subDays(rand(0, 400)); // up to 2 years ago
+        $soldDate = null;
+
+        if ($isSold) {
+            // Sold after 1 to 60 days of buying, within today
+            $soldDate = $boughtDate->copy()->addDays(rand(1, 60));
+            if ($soldDate->greaterThan(Carbon::now())) {
+                $soldDate = Carbon::now(); // Don't go beyond today
+            }
+        }
+
         $isReturned = !$isSold && $this->faker->boolean(20);
 
         return [
@@ -31,11 +40,11 @@ class AccountFactory extends Factory
             'th_level' => $this->faker->numberBetween(10, 17),
 
             'bought_price' => $boughtPrice,
-            'sold_price' => $soldPrice,
+            'sold_price' => $isSold ? $this->faker->numberBetween(10000, 40000) : 0,
 
             'is_acc_protection_changed' => $this->faker->boolean(90),
             'is_sold' => $isSold,
-            'is_email_changed' => $this->faker->boolean(95),
+            'is_email_changed' => $this->faker->boolean(90),
             'is_email_disabled' => $this->faker->boolean(10),
             'is_deposit' => !$isSold && $this->faker->boolean(20),
             'is_returned' => $isReturned,
@@ -44,7 +53,7 @@ class AccountFactory extends Factory
             'bought_by' => 1,
 
             'bought_date' => $boughtDate->toDateString(),
-            'sold_date' => $isSold ? $boughtDate->copy()->addDays(rand(1, 10))->toDateString() : null,
+            'sold_date' => $soldDate?->toDateString(),
         ];
     }
 }

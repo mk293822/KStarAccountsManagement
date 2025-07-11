@@ -1,35 +1,77 @@
-import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
+import AccountChart from '@/components/dashboard-components/account-chart';
+import { Button } from '@/components/ui/button'; // You can replace with your button if not using shadcn/ui
 import AppLayout from '@/layouts/app-layout';
-import { type BreadcrumbItem } from '@/types';
-import { Head } from '@inertiajs/react';
+import { ChartDatas, type BreadcrumbItem } from '@/types';
+import { Head, router } from '@inertiajs/react';
+import { useEffect, useState } from 'react';
 
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Dashboard',
-        href: '/dashboard',
-    },
-];
+// Breadcrumbs
+const breadcrumbs: BreadcrumbItem[] = [{ title: 'Dashboard', href: '/dashboard' }];
 
-export default function Dashboard() {
+type Props = {
+    chartDatas: ChartDatas;
+    period: 'daily' | 'monthly' | 'all';
+};
+
+const Dashboard = ({ chartDatas, period }: Props) => {
+    const [mode, setMode] = useState<'daily' | 'monthly' | 'all'>(period);
+
+    useEffect(() => setMode(period), [period]);
+
+    useEffect(() => {
+        router.get(
+            '/dashboard',
+            {
+                period: mode,
+            },
+            { preserveScroll: true, preserveState: true, replace: true },
+        );
+    }, [mode]);
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
-            <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4 overflow-x-auto">
-                <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-                    <div className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                        <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                    </div>
-                    <div className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                        <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                    </div>
-                    <div className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                        <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
+            <div className="flex h-full flex-1 flex-col gap-4 p-4">
+                {/* Header and Mode Switch */}
+                <div className="flex items-center justify-between">
+                    <h1 className="text-lg font-semibold text-foreground">Accounts</h1>
+                    <div className="flex items-center gap-2">
+                        <Button variant={mode === 'daily' ? 'default' : 'outline'} onClick={() => setMode('daily')}>
+                            Daily
+                        </Button>
+                        <Button variant={mode === 'monthly' ? 'default' : 'outline'} onClick={() => setMode('monthly')}>
+                            Monthly
+                        </Button>
+                        <Button variant={mode === 'all' ? 'default' : 'outline'} onClick={() => setMode('all')}>
+                            All
+                        </Button>
                     </div>
                 </div>
-                <div className="relative min-h-[100vh] flex-1 overflow-hidden rounded-xl border border-sidebar-border/70 md:min-h-min dark:border-sidebar-border">
-                    <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
+                {/* Stat cards */}
+                <div className="grid gap-4 md:grid-cols-3">
+                    <StatCard title="Left Accounts" value={chartDatas.left_accounts.length} />
+                    <StatCard title="Bought Accounts" value={chartDatas.bought_accounts.length} />
+                    <StatCard title="Sold Accounts" value={chartDatas.sold_accounts.length} />
+                    <StatCard title="Acc Protection Unchanged Accounts" value={chartDatas.unchanged_acc_protection_accounts.length} />
+                    <StatCard title="Email Unchanged Accounts" value={chartDatas.unchanged_email_accounts.length} />
+                    <StatCard title="Email Disabled Accounts" value={chartDatas.mail_disabled_accounts.length} />
                 </div>
+
+                {/* Chart */}
+                <AccountChart bought_accounts={chartDatas.bought_accounts} sold_accounts={chartDatas.sold_accounts} mode={mode} />
             </div>
         </AppLayout>
     );
-}
+};
+
+export default Dashboard;
+
+// Typed StatCard Component
+const StatCard = ({ title, value }: { title: string; value: number }) => {
+    return (
+        <div className="rounded-lg border border-border bg-muted/40 px-4 py-3 shadow-sm">
+            <div className="text-sm text-muted-foreground">{title}</div>
+            <div className="text-xl font-semibold text-foreground">{value.toLocaleString()}</div>
+        </div>
+    );
+};

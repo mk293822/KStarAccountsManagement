@@ -108,3 +108,19 @@ export interface AccountCreateForm {
     is_email_disabled: boolean;
     bought_date: string;
 }
+
+export interface ChartData {
+    id: number;
+    bought_date: string;
+}
+
+export interface ChartDatas {
+    left_accounts: ChartData[];
+    sold_accounts: ChartData[];
+    deposit_accounts: ChartData[];
+    returned_accounts: ChartData[];
+    mail_disabled_accounts: ChartData[];
+    unchanged_acc_protection_accounts: ChartData[];
+    unchanged_email_accounts: ChartData[];
+    bought_accounts: ChartData[];
+}
