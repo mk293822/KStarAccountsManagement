@@ -45,8 +45,19 @@ const AccountChart = ({ bought_accounts, sold_accounts, mode }: Props) => {
         const item = datas.find((d) => d.date === key);
         if (item) {
             item.bought += 1;
-            const isSold = sold_accounts.some((s) => s.id === acc.id);
-            if (isSold) item.sold += 1;
+        }
+    });
+
+    sold_accounts.forEach((acc) => {
+        let key: string | number;
+
+        if (mode === 'monthly') key = getMonthShortName(acc.sold_date);
+        else if (mode === 'daily') key = new Date(acc.sold_date).getDate();
+        else key = new Date(acc.sold_date).getFullYear();
+
+        const item = datas.find((d) => d.date === key);
+        if (item) {
+            item.sold += 1;
         }
     });
 

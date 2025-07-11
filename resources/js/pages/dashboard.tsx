@@ -29,7 +29,6 @@ const Dashboard = ({ accounts, period }: Props) => {
         );
     }, [mode]);
 
-    console.log(accounts.sold_accounts);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>

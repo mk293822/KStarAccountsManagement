@@ -15,12 +15,11 @@ class DashboardService
         $query = Account::query();
 
         $left_accounts = $query->where('is_sold', false)
-            ->get(['id', 'bought_date', 'bought_price', 'sold_price'])
+            ->get(['id', 'bought_date', 'bought_price'])
             ->map(fn($acc) => [
                 'id' => $acc->id,
                 'bought_date' => $acc->bought_date->toDateString(),
             'bought_price' => $acc->bought_price,
-            'sold_price' => $acc->sold_price
             ])
             ->toArray();
 
@@ -36,15 +35,24 @@ class DashboardService
             );
         }
 
-        $bought_accounts = (clone $accountsQuery)->get(['id', 'bought_date', 'bought_price', 'sold_price'])->map(fn($acc) =>  [
+        $bought_accounts = (clone $accountsQuery)->get(['id', 'bought_date', 'bought_price'])->map(fn($acc) =>  [
             'id' => $acc->id,
             'bought_date' => $acc->bought_date->toDateString(),
             'bought_price' => $acc->bought_price,
-            'sold_price' => $acc->sold_price
         ])->toArray();
 
+        $sold_accounts = (clone $accountsQuery)
+            ->where('is_sold', true)
+            ->get(['id', 'bought_date', 'sold_price', 'bought_price', 'sold_date'])
+            ->map(fn($acc) =>  [
+                'id' => $acc->id,
+                'bought_date' => $acc->bought_date->toDateString(),
+                'sold_date' => $acc->bought_date->toDateString(),
+                'bought_price' => $acc->bought_price,
+                'sold_price' => $acc->sold_price
+            ])->toArray();
+
         $conditions = [
-            'sold_accounts' => ['is_sold', true],
             'deposit_accounts' => ['is_deposit', true],
             'returned_accounts' => ['is_returned', true],
             'mail_disabled_accounts' => ['is_email_disabled', true],
@@ -57,18 +65,18 @@ class DashboardService
         foreach ($conditions as $key => [$field, $value]) {
             $data[$key] = (clone $accountsQuery)
                 ->where($field, $value)
-                ->get(['id', 'bought_date', 'sold_price', 'bought_price'])
+                ->get(['id', 'bought_date', 'bought_price'])
                 ->map(fn($acc) =>  [
                     'id' => $acc->id,
                     'bought_date' => $acc->bought_date->toDateString(),
-                    'bought_price' => $acc->bought_price,
-                    'sold_price' => $acc->sold_price
+                'bought_price' => $acc->bought_price,
                 ])->toArray();
         }
 
         return [
             'left_accounts' => $left_accounts,
             'bought_accounts' => $bought_accounts,
+            'sold_accounts' => $sold_accounts,
             ...$data,
         ];
     }

@@ -112,6 +112,7 @@ export interface AccountCreateForm {
 export interface DashboardAccount {
     id: number;
     bought_date: string;
+    sold_date: string;
     bought_price: number;
     sold_price: number;
 }
