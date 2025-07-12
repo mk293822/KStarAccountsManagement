@@ -1,5 +1,6 @@
 import AccountChart from '@/components/dashboard-components/account-chart';
-import StatCard from '@/components/dashboard-components/status-card';
+import AccountStatusCards from '@/components/dashboard-components/account-status-cards';
+import AccountTypePieChart from '@/components/dashboard-components/account-type-pie-chart';
 import { Button } from '@/components/ui/button'; // You can replace with your button if not using shadcn/ui
 import AppLayout from '@/layouts/app-layout';
 import { DashboardAccounts, type BreadcrumbItem } from '@/types';
@@ -29,7 +30,6 @@ const Dashboard = ({ accounts, period }: Props) => {
         );
     }, [mode]);
 
-
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
@@ -39,10 +39,10 @@ const Dashboard = ({ accounts, period }: Props) => {
                     <h1 className="text-lg font-semibold text-foreground">Accounts</h1>
                     <div className="flex items-center gap-2">
                         <Button variant={mode === 'daily' ? 'default' : 'outline'} onClick={() => setMode('daily')}>
-                            Daily
+                            This Month
                         </Button>
                         <Button variant={mode === 'monthly' ? 'default' : 'outline'} onClick={() => setMode('monthly')}>
-                            Monthly
+                            This Year
                         </Button>
                         <Button variant={mode === 'all' ? 'default' : 'outline'} onClick={() => setMode('all')}>
                             All
@@ -50,32 +50,12 @@ const Dashboard = ({ accounts, period }: Props) => {
                     </div>
                 </div>
                 {/* Stat cards */}
-                <div className="grid gap-4 md:grid-cols-3">
-                    <StatCard
-                        title="Left Accounts"
-                        value={accounts.left_accounts.length}
-                        price={accounts.left_accounts.reduce((sum, acc) => sum + (acc.bought_price || 0), 0)}
-                        priceLabel="Total Bought Price"
-                    />
-                    <StatCard
-                        title="Bought Accounts"
-                        priceLabel="Total Bought Price"
-                        value={accounts.bought_accounts.length}
-                        price={accounts.bought_accounts.reduce((sum, acc) => sum + (acc.bought_price || 0), 0)}
-                    />
-                    <StatCard
-                        title="Sold Accounts"
-                        priceLabel="Total Sold Price"
-                        value={accounts.sold_accounts.length}
-                        price={accounts.sold_accounts.reduce((sum, acc) => sum + (acc.sold_price || 0), 0)}
-                    />
-                    <StatCard title="Acc Protection Unchanged Accounts" value={accounts.unchanged_acc_protection_accounts.length} />
-                    <StatCard title="Email Unchanged Accounts" value={accounts.unchanged_email_accounts.length} />
-                    <StatCard title="Email Disabled Accounts" value={accounts.mail_disabled_accounts.length} />
-                </div>
+                <AccountStatusCards accounts={accounts} />
 
                 {/* Chart */}
                 <AccountChart bought_accounts={accounts.bought_accounts} sold_accounts={accounts.sold_accounts} mode={mode} />
+
+                <AccountTypePieChart accounts={accounts} />
             </div>
         </AppLayout>
     );

@@ -62,8 +62,8 @@ const AccountChart = ({ bought_accounts, sold_accounts, mode }: Props) => {
     });
 
     return (
-        <div className="rounded-lg border border-border bg-muted/40 p-4 shadow-sm">
-            <h2 className="mb-2 text-base font-semibold text-foreground">{mode === 'daily' ? 'Daily' : 'Monthly'} Bought & Sold Accounts</h2>
+        <div className="rounded-lg border border-border bg-muted/40 pe-2 pt-4 shadow-sm">
+            <h2 className="mb-4 ps-8 text-base font-semibold text-foreground">{mode === 'daily' ? 'Daily' : 'Monthly'} Bought & Sold Accounts</h2>
             <ResponsiveContainer width="100%" height={300}>
                 <LineChart data={datas}>
                     <CartesianGrid strokeDasharray="3 3" />
