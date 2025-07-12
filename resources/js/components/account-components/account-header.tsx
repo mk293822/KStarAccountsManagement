@@ -7,7 +7,6 @@ import { Account } from '@/types';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { Label } from '../ui/label';
 import { Button } from '../ui/button';
-import CreateAccount from './create-modal';
 import FilteringOrderingModal from './filtering-ordering-modal';
 
 type Props = {
@@ -32,7 +31,6 @@ const AccountHeader = ({ openIndexes, accounts, setOpenIndexes, page }: Props) =
     const { query } = usePage<QueryProps>().props;
 
     const { searchQuery: query_prop = '', sort_by = '', filter_by = '', order_by = 'desc', filter_value = '' } = query || {};
-    const [showCreateAccount, setShowCreateAccount] = useState(false);
     const [showFilterOrderModal, setShowFilterOrderModal] = useState(false);
 
     const [searchQuery, setSearchQuery] = useState('');
@@ -198,7 +196,7 @@ const AccountHeader = ({ openIndexes, accounts, setOpenIndexes, page }: Props) =
                             <ChevronDown className={cn('h-4 w-4 transition-transform', openIndexes.size !== 0 && 'rotate-180')} />
                         </Button>
                         {/* Create New Account Button */}
-                        <Button size={'sm'} onClick={() => setShowCreateAccount(!showCreateAccount)} variant={'secondary'}>
+                        <Button size={'sm'} onClick={() => router.visit(route('account.create'))} variant={'secondary'}>
                             Create Account
                         </Button>
                     </div>
@@ -206,7 +204,6 @@ const AccountHeader = ({ openIndexes, accounts, setOpenIndexes, page }: Props) =
             </div>
 
             {/* Create Modal */}
-            <CreateAccount show={showCreateAccount} onClose={() => setShowCreateAccount(false)} />
             <FilteringOrderingModal
                 show={showFilterOrderModal}
                 onClose={() => setShowFilterOrderModal(false)}

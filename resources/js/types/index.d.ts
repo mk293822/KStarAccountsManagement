@@ -103,10 +103,16 @@ export interface AccountCreateForm {
     th_level: number;
 
     bought_price: number;
+    bought_date: string;
+
     is_acc_protection_changed: boolean;
     is_email_changed: boolean;
     is_email_disabled: boolean;
-    bought_date: string;
+    is_sold: boolean;
+
+    sold_date: string;
+    sold_price: number;
+    buyer_name: string;
 }
 
 export interface DashboardAccount {

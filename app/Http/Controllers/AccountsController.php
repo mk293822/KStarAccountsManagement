@@ -39,8 +39,13 @@ class AccountsController extends Controller
         return Inertia::render('accounts/index', compact('accounts', 'query'));
     }
 
+    public function create()
+    {
+        return Inertia::render('accounts/create');
+    }
 
-    public function create(AccountCreateRequest $request)
+
+    public function store(AccountCreateRequest $request)
     {
         $account_create = $this->accountService->create($request);
 
