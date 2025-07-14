@@ -1,0 +1,44 @@
+networks:
+  kstar_network:
+    driver: bridge
+    enable_ipv6: false
+
+services:
+
+  laravel-docker:
+    container_name: laravel-docker
+    build: .
+    user: "${UID}:${GID}"
+    environment:
+      - UID=${UID}
+      - GID=${GID}
+    volumes:
+      - .:/var/www/html
+    ports:
+      - 8000:80
+    networks:
+      - kstar_network
+    depends_on:
+      - mysql_db
+
+  mysql_db:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: laravel_docker
+    ports:
+      - 3306:3306
+    networks:
+      - kstar_network
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    ports:
+      - 9001:80
+    environment:
+      PMA_HOST: mysql_db
+      PMA_PORT: 3306
+    depends_on:
+      - mysql_db
+    networks:
+      - kstar_network
