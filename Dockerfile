@@ -7,41 +7,38 @@ RUN a2enmod rewrite
 ARG UID=1000
 ARG GID=1000
 
-# Install system dependencies (MUST be run as root)
+# Install system dependencies
 RUN apt-get update -y && apt-get install -y \
-    libicu-dev \
-    libmariadb-dev \
-    unzip zip \
-    zlib1g-dev \
-    libpng-dev \
-    libjpeg-dev \
-    libfreetype6-dev \
-    libjpeg62-turbo-dev
+    libicu-dev libmariadb-dev unzip zip curl \
+    zlib1g-dev libpng-dev libjpeg-dev libfreetype6-dev \
+    libjpeg62-turbo-dev gnupg git
 
 # Install PHP extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) gd \
-    && docker-php-ext-install gettext intl pdo_mysql
+    && docker-php-ext-install -j$(nproc) gd gettext intl pdo_mysql
 
-# Create user after installing software
-RUN groupadd -g ${GID} appgroup && \
-    useradd -m -u ${UID} -g ${GID} -s /bin/bash appuser
-
-# Switch to non-root user
-USER appuser
-
-# Set working directory
-WORKDIR /var/www/html
+# Install Node.js + npm
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
+    apt-get install -y nodejs
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copy your Laravel app
+# Create user
+RUN groupadd -g ${GID} appgroup && \
+    useradd -m -u ${UID} -g ${GID} -s /bin/bash minkhant
+
+# Set working directory
+WORKDIR /var/www/html
+
+# Copy app code
 COPY . .
+
+# Copy Apache config
 COPY apache/000-default.conf /etc/apache2/sites-available/000-default.conf
 
-
-# Optional: fix permissions
-USER root
+# Fix permissions (optional but useful)
 RUN chown -R www-data:www-data /var/www/html && chmod -R 755 /var/www/html
-USER appuser
+
+# Switch to non-root user (optional)
+USER minkhant
