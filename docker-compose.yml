@@ -16,6 +16,7 @@ services:
       - .:/var/www/html
     ports:
       - 8000:80
+      - 5173:5173
     networks:
       - kstar_network
     depends_on:

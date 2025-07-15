@@ -1,26 +1,26 @@
 build-force:
-	docker-compose build --no-cache --force-rm
+	docker compose build --no-cache --force-rm
 
 build:
-	docker-compose build
+	docker compose build
 
 up:
-	docker-compose up -d
+	docker compose up -d
 
 stop:
-	docker-compose stop
+	docker compose stop
 
 down:
-	docker-compose down
+	docker compose down
 
 down-volumes:
-	docker-compose down --volumes --remove-orphans
+	docker compose down --volumes --remove-orphans
 
 bash:
-	docker-compose exec laravel-docker bash
+	docker compose exec laravel-docker bash
 
 composer:
-	docker-compose exec laravel-docker composer install
+	docker compose exec laravel-docker composer install
 
 migrate:
-	docker-compose exec laravel-docker php artisan migrate:fresh --seed
+	docker compose exec laravel-docker php artisan migrate:fresh --seed
