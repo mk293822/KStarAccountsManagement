@@ -62,38 +62,40 @@ const AccountChart = ({ bought_accounts, sold_accounts, mode }: Props) => {
     });
 
     return (
-        <div className="rounded-lg border border-border bg-muted/40 pe-2 pt-4 shadow-sm">
-            <h2 className="mb-4 ps-8 text-base font-semibold text-foreground">{mode === 'daily' ? 'Daily' : 'Monthly'} Bought & Sold Accounts</h2>
-            <div className="h-48">
-                <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={datas}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="date" />
-                        <YAxis />
-                        <Tooltip
-                            contentStyle={{
-                                backgroundColor: '#0f0f0f', // or 'black'
-                                border: '1px solid #333',
-                                borderRadius: '0.5rem',
-                                color: '#f9f9f9',
-                            }}
-                            labelStyle={{
-                                color: '#d1d5db', // Tailwind gray-300
-                                fontWeight: '500',
-                            }}
-                            itemStyle={{
-                                color: '#f3f4f6', // Tailwind gray-100
-                            }}
-                        />
+		<div className="rounded-lg border border-border bg-muted/40 pe-2 pt-4 shadow-sm">
+			<h2 className="mb-4 ps-8 text-base font-semibold text-foreground">{mode === 'daily' ? 'Daily' : 'Monthly'} Bought & Sold Accounts</h2>
+			<div className="h-56 pe-4 sm:pe-8 md:h-72 lg:h-72">
+				<ResponsiveContainer width="100%" height="100%">
+					<LineChart data={datas}>
+						<CartesianGrid strokeDasharray="3 3" />
+						<XAxis dataKey="date" tick={{ fontSize: window.innerWidth <= 460 ? 10 : 14 }} />
 
-                        <Legend />
-                        <Line type="monotone" dataKey="bought" stroke="#3b82f6" name="Bought" />
-                        <Line type="monotone" dataKey="sold" stroke="#f97316" name="Sold" />
-                    </LineChart>
-                </ResponsiveContainer>
-            </div>
-        </div>
-    );
+						<YAxis tick={{ fontSize: window.innerWidth <= 460 ? 10 : 14 }} />
+
+						<Tooltip
+							contentStyle={{
+								backgroundColor: '#0f0f0f', // or 'black'
+								border: '1px solid #333',
+								borderRadius: '0.5rem',
+								color: '#f9f9f9',
+							}}
+							labelStyle={{
+								color: '#d1d5db', // Tailwind gray-300
+								fontWeight: '500',
+							}}
+							itemStyle={{
+								color: '#f3f4f6', // Tailwind gray-100
+							}}
+						/>
+
+						<Legend />
+						<Line type="monotone" dataKey="bought" stroke="#3b82f6" name="Bought" />
+						<Line type="monotone" dataKey="sold" stroke="#f97316" name="Sold" />
+					</LineChart>
+				</ResponsiveContainer>
+			</div>
+		</div>
+	);
 };
 
 export default AccountChart;
