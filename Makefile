@@ -1,3 +1,9 @@
+start-dev:
+	down
+	up
+	migrate
+	npm-dev
+
 build-force:
 	docker compose build --no-cache --force-rm
 
@@ -24,3 +30,9 @@ composer:
 
 migrate:
 	docker compose exec laravel-docker php artisan migrate:fresh --seed
+
+npm-dev:
+	docker compose exec laravel-docker npm run dev
+
+npm-build:
+	docker compose exec laravel-docker npm run build
