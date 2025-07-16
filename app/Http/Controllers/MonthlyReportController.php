@@ -15,9 +15,8 @@ class MonthlyReportController extends Controller
      */
     public function index(Request $request)
     {
-		$accounts = AccountResource::collection(Account::query()
-			->whereYear('bought_date', Carbon::now()->year)
-			->whereMonth('bought_date', Carbon::now()->month)->get())->resolve();
+		$accounts = AccountResource::collection(Account::whereYear('bought_date', Carbon::now()->year)
+			->whereMonth('bought_date', Carbon::now()->month)->paginate(25)->appends($request->query()));
 
         return Inertia::render('monthly-report/index', compact('accounts'));
     }

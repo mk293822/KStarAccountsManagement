@@ -33,10 +33,9 @@ class AccountsController extends Controller
     {
         $get_accounts = $this->accountService->getAccounts($request);
 
-        $accounts = AccountResource::collection($get_accounts->paginate(25)->appends($request->query()));
-        $query = $request->query();
+		$accounts = AccountResource::collection($get_accounts->paginate(25)->appends($request->query()));
 
-        return Inertia::render('accounts/index', compact('accounts', 'query'));
+		return Inertia::render('accounts/index', compact('accounts'));
     }
 
     public function create()

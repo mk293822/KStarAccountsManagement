@@ -52,21 +52,21 @@ const AccountHeader = ({ openIndexes, accounts, setOpenIndexes, page }: Props) =
     useEffect(() => {
         const timeout = setTimeout(() => {
             router.get(
-                '/accounts',
-                {
-                    searchQuery: debouncedSearch.trim() ? debouncedSearch : undefined,
-                    filter_by: filterBy || undefined,
-                    sort_by: sortBy || undefined,
-                    order_by: orderBy || undefined,
-                    page: page || undefined,
-                    filter_value: filterValue || true,
-                },
-                {
-                    preserveScroll: true,
-                    preserveState: true,
-                    replace: true,
-                },
-            );
+				route('accounts'),
+				{
+					searchQuery: debouncedSearch.trim() ? debouncedSearch : undefined,
+					filter_by: filterBy || undefined,
+					sort_by: sortBy || undefined,
+					order_by: orderBy || undefined,
+					page: page || undefined,
+					filter_value: filterValue || true,
+				},
+				{
+					preserveScroll: true,
+					preserveState: true,
+					replace: true,
+				},
+			);
         }, 200);
 
         return () => clearTimeout(timeout);
