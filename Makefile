@@ -25,6 +25,9 @@ down-volumes:
 bash:
 	docker compose exec laravel-docker bash
 
+bash-root:
+	docker exec -u 0 -it laravel-docker bash
+
 composer:
 	docker compose exec laravel-docker composer install
 

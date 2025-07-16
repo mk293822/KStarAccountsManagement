@@ -32,3 +32,6 @@ yarn-error.log
 
 # Homestead
 Homestead.*
+
+# database
+/database/database.sqlite
