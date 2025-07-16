@@ -2,21 +2,26 @@ import { NavMain } from '@/components/nav-main';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { LayoutGrid, Table2Icon } from 'lucide-react';
+import { BarChart2, LayoutGrid, Table2Icon } from 'lucide-react';
 import AppLogo from './app-logo';
 import { NavUser } from '../nav-user';
 
 const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: '/dashboard',
-        icon: LayoutGrid,
-    },
-    {
-        title: 'Accounts',
-        href: '/accounts',
-        icon: Table2Icon,
-    },
+	{
+		title: 'Dashboard',
+		href: '/dashboard',
+		icon: LayoutGrid,
+	},
+	{
+		title: 'Monthly Report',
+		href: '/monthly-report',
+		icon: BarChart2,
+	},
+	{
+		title: 'Accounts',
+		href: '/accounts',
+		icon: Table2Icon,
+	},
 ];
 
 // const footerNavItems: NavItem[] = [

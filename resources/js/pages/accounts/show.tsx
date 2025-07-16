@@ -1,35 +1,38 @@
 import { Flag, Info, InfoRow, SectionCard, SectionHeader } from '@/components/custom-components';
+import { useCurrencyFormatter } from '@/hooks/useCurrencyFormatter';
 import AppLayout from '@/layouts/app-layout';
 import { Account, BreadcrumbItem } from '@/types';
 import { Link, router } from '@inertiajs/react';
 import axios, { isAxiosError } from 'axios';
 
 const Show = ({ account }: { account: Account }) => {
-    const breadcrumbs: BreadcrumbItem[] = [
-        {
-            title: 'Account',
-            href: `/accounts`,
-        },
-        {
-            title: 'Account Details',
-            href: `/accounts/${account.id}`,
-        },
-    ];
+	const currencyFormatter = useCurrencyFormatter('MMK');
 
-    const handleAccountDelete = async () => {
-        try {
-            await axios.delete(route('account.destroy', account.id));
-            router.visit(route('accounts'));
-        } catch (e) {
-            if (isAxiosError(e)) {
-                console.log(e.response?.statusText);
-            } else {
-                console.log('Unknown error: ', e);
-            }
-        }
-    };
+	const breadcrumbs: BreadcrumbItem[] = [
+		{
+			title: 'Account',
+			href: `/accounts`,
+		},
+		{
+			title: 'Account Details',
+			href: `/accounts/${account.id}`,
+		},
+	];
 
-    return (
+	const handleAccountDelete = async () => {
+		try {
+			await axios.delete(route('account.destroy', account.id));
+			router.visit(route('accounts'));
+		} catch (e) {
+			if (isAxiosError(e)) {
+				console.log(e.response?.statusText);
+			} else {
+				console.log('Unknown error: ', e);
+			}
+		}
+	};
+
+	return (
 		<AppLayout breadcrumbs={breadcrumbs}>
 			<div className="mx-auto max-w-4xl space-y-4 rounded-xl bg-zinc-950 p-4 text-gray-200 shadow-md sm:p-6">
 				<div className="flex flex-row items-center justify-between">
@@ -73,7 +76,10 @@ const Show = ({ account }: { account: Account }) => {
 					<div>
 						<SectionHeader title="Purchase Details" />
 						<div className="space-y-2">
-							<InfoRow label="Bought Price:" value={<span className="text-green-400">${account.bought_price}</span>} />
+							<InfoRow
+								label="Bought Price:"
+								value={<span className="text-green-400">{currencyFormatter(account.bought_price)}</span>}
+							/>
 							<InfoRow label="Bought Date:" value={new Date(account.bought_date).toLocaleDateString()} />
 							<InfoRow label="Bought By:" value={account.bought_by} />
 							<InfoRow label="Seller Name:" value={account.seller_name} />
@@ -86,7 +92,11 @@ const Show = ({ account }: { account: Account }) => {
 							<div className="space-y-2">
 								<InfoRow
 									label="Sold Price:"
-									value={<span className="text-yellow-400">{account.sold_price ? `$${account.sold_price}` : '-'}</span>}
+									value={
+										<span className="text-yellow-400">
+											{account.sold_price && account.sold_price > 0 ? `${currencyFormatter(account.sold_price)}` : '-'}
+										</span>
+									}
 								/>
 								{account.sold_date && <InfoRow label="Sold Date:" value={new Date(account.sold_date).toLocaleDateString()} />}
 								{account.buyer_name && <InfoRow label="Buyer Name:" value={account.buyer_name} />}
@@ -98,10 +108,12 @@ const Show = ({ account }: { account: Account }) => {
 						<div>
 							<SectionHeader title="Summary" />
 							<div className="space-y-2">
-								{(account.profit ?? 0) > 0 && (
-									<InfoRow label="Profit:" value={<span className="text-green-400">${account.profit}</span>} />
+								{account.profit && account.profit > 0 && (
+									<InfoRow label="Profit:" value={<span className="text-green-400">{currencyFormatter(account.profit)}</span>} />
 								)}
-								{(account.loss ?? 0) > 0 && <InfoRow label="Loss:" value={<span className="text-red-400">${account.loss}</span>} />}
+								{account.loss && account.loss > 0 && (
+									<InfoRow label="Loss:" value={<span className="text-red-400">{currencyFormatter(account.loss)}</span>} />
+								)}
 							</div>
 						</div>
 					)}
@@ -128,10 +140,10 @@ const Show = ({ account }: { account: Account }) => {
 						<h3 className="mb-2 text-lg font-semibold text-red-300">Returned Account Info</h3>
 						<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
 							<Info label="Return By" value={account.returned_account.name} />
-							<Info label="Return Price" value={`$${account.returned_account.return_price}`} />
+							<Info label="Return Price" value={`${currencyFormatter(account.returned_account.return_price)}`} />
 						</div>
 						<div className="mt-2 grid grid-cols-1 gap-4 sm:grid-cols-2">
-							<Info label="Sold Price" value={`$${account.returned_account.sold_price}`} />
+							<Info label="Sold Price" value={`${currencyFormatter(account.returned_account.sold_price)}`} />
 							<Info label="Return Date" value={new Date(account.returned_account.returned_date).toLocaleDateString()} />
 						</div>
 						<div className="mt-2">
@@ -145,10 +157,10 @@ const Show = ({ account }: { account: Account }) => {
 						<h3 className="mb-2 text-lg font-semibold text-green-300">Deposit Account Info</h3>
 						<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
 							<Info label="Deposit By" value={account.deposit_account.name} />
-							<Info label="Deposit Amount" value={`$${account.deposit_account.deposit_amount}`} />
+							<Info label="Deposit Amount" value={`${currencyFormatter(account.deposit_account.deposit_amount)}`} />
 						</div>
 						<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-							<Info label="Return Deposit Amount" value={`$${account.deposit_account.return_deposit_amount}`} />
+							<Info label="Return Deposit Amount" value={`${currencyFormatter(account.deposit_account.return_deposit_amount)}`} />
 							<Info label="Deposited Date" value={new Date(account.deposit_account.deposit_date).toLocaleDateString()} />
 						</div>
 						<div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-3">
