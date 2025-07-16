@@ -36,7 +36,7 @@ const Dashboard = ({ accounts, period }: Props) => {
 			<div className="flex h-full flex-1 flex-col gap-4 p-4">
 				{/* Header and Mode Switch */}
 				<div className="flex items-center justify-between">
-					<h1 className="text-lg font-semibold text-foreground">Accounts</h1>
+					<h1 className="text-xl font-semibold text-foreground">Accounts</h1>
 					<div className="flex items-center gap-2">
 						<Button size={'sm'} variant={mode === 'daily' ? 'default' : 'outline'} onClick={() => setMode('daily')}>
 							This Month

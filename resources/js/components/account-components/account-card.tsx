@@ -8,22 +8,24 @@ import { useState } from 'react';
 import SoldModal from './sold-modal';
 import ReturnModal from './return-modal';
 import DepositModal from './deposit-modal';
+import { useCurrencyFormatter } from '@/hooks/useCurrencyFormatter';
 
 type AccountCardProps = {
-    account: Account;
-    index: number;
-    isOpen: boolean;
-    onToggle: () => void;
+	account: Account;
+	index: number;
+	isOpen: boolean;
+	onToggle: () => void;
 };
 
 export default function AccountCard({ account, index, onToggle, isOpen }: AccountCardProps) {
-    const account_status = cn(account.is_sold && 'Sold', account.is_deposit && 'Deposit');
-    const statusStyles = account.is_sold ? 'bg-red-600 text-white' : account.is_deposit ? 'bg-blue-600 text-white' : 'bg-green-600 text-white';
-    const [openSoldModal, setOpenSoldModal] = useState(false);
-    const [openDepositModal, setOpenDepositModal] = useState(false);
-    const [openReturnModal, setOpenReturnModal] = useState(false);
+	const account_status = cn(account.is_sold && 'Sold', account.is_deposit && 'Deposit');
+	const statusStyles = account.is_sold ? 'bg-red-600 text-white' : account.is_deposit ? 'bg-blue-600 text-white' : 'bg-green-600 text-white';
+	const [openSoldModal, setOpenSoldModal] = useState(false);
+	const [openDepositModal, setOpenDepositModal] = useState(false);
+	const [openReturnModal, setOpenReturnModal] = useState(false);
+	const currencyFormatter = useCurrencyFormatter('MMK');
 
-    return (
+	return (
 		<>
 			<Collapsible
 				open={isOpen}
@@ -60,7 +62,7 @@ export default function AccountCard({ account, index, onToggle, isOpen }: Accoun
 
 				<CollapsibleContent className="space-y-2 border-t border-zinc-800 px-4 pt-4 pb-2 text-sm text-gray-300">
 					<InfoRow label="Town Hall Level:" value={<span className="text-blue-400">{account.th_level}</span>} />
-					<InfoRow label="Bought Price:" value={<span className="text-green-400">${account.bought_price}</span>} />
+					<InfoRow label="Bought Price:" value={<span className="text-green-400">{currencyFormatter(account.bought_price)}</span>} />
 					<InfoRow label="Account Protection Changed:" value={account.is_acc_protection_changed ? 'Yes' : 'No'} />
 					<InfoRow label="Email Changed:" value={account.is_email_changed ? 'Yes' : 'No'} />
 					<InfoRow label="Bought By:" value={account.bought_by} />
@@ -68,7 +70,7 @@ export default function AccountCard({ account, index, onToggle, isOpen }: Accoun
 					{account.is_sold && (
 						<InfoRow
 							label="Sold Price:"
-							value={<span className="text-yellow-400">{account.sold_price ? `$${account.sold_price}` : '-'}</span>}
+							value={<span className="text-yellow-400">{account.sold_price ? `${currencyFormatter(account.sold_price)}` : '-'}</span>}
 						/>
 					)}
 					{account.is_sold && account.sold_date && <InfoRow label="Sold Date:" value={new Date(account.sold_date).toLocaleDateString()} />}
