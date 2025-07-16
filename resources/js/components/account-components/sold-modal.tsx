@@ -105,7 +105,7 @@ const SoldModal = ({ show, onClose, account }: Props) => {
 						<InputError message={errors.sold_date} />
 					</div>
 
-					<div className="flex justify-end gap-4 pt-8 sm:col-span-2">
+					<div className="col-span-2 flex justify-end gap-4 pt-4">
 						<Button type="button" variant={'ghost'} onClick={onClose} className="w-28 border border-gray-400">
 							Cancel
 						</Button>
