@@ -10,10 +10,6 @@ services:
   kstart-account-management:
     container_name: kstart-account-management
     build: .
-    user: "${UID}:${GID}"
-    environment:
-      - UID=${UID}
-      - GID=${GID}
     volumes:
       - .:/var/www/html
     ports:
@@ -28,9 +24,9 @@ services:
     image: postgres:latest
     container_name: postgres_db
     environment:
-      POSTGRES_USER: minkhant
-      POSTGRES_PASSWORD: min293822
-      POSTGRES_DB: kstar_account_management_db
+      PPOSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - 5432:5432
     networks:

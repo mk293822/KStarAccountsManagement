@@ -3,10 +3,6 @@ FROM php:8.4-apache
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
 
-# Set build args for UID/GID
-ARG UID=1000
-ARG GID=1000
-
 # Install system dependencies
 RUN apt-get update -y && apt-get install -y \
 	libicu-dev libmariadb-dev libpq-dev unzip zip curl \
@@ -24,10 +20,6 @@ RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Create user
-RUN groupadd -g ${GID} appgroup && \
-	useradd -m -u ${UID} -g ${GID} -s /bin/bash minkhant
-
 # Set working directory
 WORKDIR /var/www/html
 
@@ -40,5 +32,6 @@ COPY apache/000-default.conf /etc/apache2/sites-available/000-default.conf
 # Fix permissions
 RUN chown -R www-data:www-data /var/www/html && chmod -R 755 /var/www/html
 
-# Switch to non-root user
-USER minkhant
+EXPOSE 80
+
+CMD ["apache2-foreground"]
