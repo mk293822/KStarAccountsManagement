@@ -24,7 +24,6 @@ auth.json
 /.nova
 /.zed
 /.fleet
-idea.dio
 
 # Misc logs
 npm-debug.log

@@ -1,3 +1,5 @@
+version: '3.8'
+
 networks:
   kstar_network:
     driver: bridge
@@ -5,8 +7,8 @@ networks:
 
 services:
 
-  laravel-docker:
-    container_name: laravel-docker
+  kstart-account-management:
+    container_name: kstart-account-management
     build: .
     user: "${UID}:${GID}"
     environment:
@@ -20,26 +22,29 @@ services:
     networks:
       - kstar_network
     depends_on:
-      - mysql_db
+      - postgres_db
 
-  mysql_db:
-    image: mysql:latest
+  postgres_db:
+    image: postgres:latest
+    container_name: postgres_db
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: laravel_docker
+      POSTGRES_USER: minkhant
+      POSTGRES_PASSWORD: min293822
+      POSTGRES_DB: kstar_account_management_db
     ports:
-      - 3306:3306
+      - 5432:5432
     networks:
       - kstar_network
 
-  phpmyadmin:
-    image: phpmyadmin:latest
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: mkt23822@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: min293822
     ports:
       - 9001:80
-    environment:
-      PMA_HOST: mysql_db
-      PMA_PORT: 3306
     depends_on:
-      - mysql_db
+      - postgres_db
     networks:
       - kstar_network

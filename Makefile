@@ -23,19 +23,19 @@ down-volumes:
 	docker compose down --volumes --remove-orphans
 
 bash:
-	docker compose exec laravel-docker bash
+	docker compose exec kstart-account-management bash
 
 bash-root:
-	docker exec -u 0 -it laravel-docker bash
+	docker exec -u 0 -it kstart-account-management bash
 
 composer:
-	docker compose exec laravel-docker composer install
+	docker compose exec kstart-account-management composer install
 
 migrate:
-	docker compose exec laravel-docker php artisan migrate:fresh --seed
+	docker compose exec kstart-account-management php artisan migrate:fresh --seed
 
 npm-dev:
-	docker compose exec laravel-docker npm run dev
+	docker compose exec kstart-account-management npm run dev
 
 npm-build:
-	docker compose exec laravel-docker npm run build
+	docker compose exec kstart-account-management npm run build
