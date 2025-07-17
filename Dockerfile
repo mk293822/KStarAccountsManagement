@@ -17,7 +17,7 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
 	apt-get install -y nodejs
 
-# Install Composer
+# Install Composer (latest)
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Set working directory
@@ -26,12 +26,20 @@ WORKDIR /var/www/html
 # Copy app code
 COPY . .
 
-# Copy Apache config
+# Copy Apache config (if you have custom virtual host config)
 COPY apache/000-default.conf /etc/apache2/sites-available/000-default.conf
+
+# Install backend dependencies
+RUN composer install
+
+# Install frontend dependencies and build
+RUN npm install && npm run build
 
 # Fix permissions
 RUN chown -R www-data:www-data /var/www/html && chmod -R 755 /var/www/html
 
+# Expose port 80
 EXPOSE 80
 
+# Start Apache
 CMD ["apache2-foreground"]

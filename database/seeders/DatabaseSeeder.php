@@ -28,33 +28,33 @@ class DatabaseSeeder extends Seeder
         ]);
 
 
-        Account::factory()->count(400)->create()->each(function ($account) {
-            if ($account->is_returned) {
-                ReturnedAccount::create([
-                    'name' => fake()->name,
-                    'account_id' => $account->id,
-                    'return_price' => fake()->numberBetween(5000, min(300000, $account->sold_price ?: 300000)),
-                    'is_password_changed' => fake()->boolean(90),
-                    'sold_price' => $account->sold_price,
-                    'returned_date' => $account->sold_date ?? now(),
-                ]);
-            }
+		// Account::factory()->count(400)->create()->each(function ($account) {
+		//     if ($account->is_returned) {
+		//         ReturnedAccount::create([
+		//             'name' => fake()->name,
+		//             'account_id' => $account->id,
+		//             'return_price' => fake()->numberBetween(5000, min(300000, $account->sold_price ?: 300000)),
+		//             'is_password_changed' => fake()->boolean(90),
+		//             'sold_price' => $account->sold_price,
+		//             'returned_date' => $account->sold_date ?? now(),
+		//         ]);
+		//     }
 
-            if ($account->is_deposit) {
-                $cancelled = fake()->boolean(50);
-                $returnDeposit = !$cancelled && fake()->boolean(50);
+		//     if ($account->is_deposit) {
+		//         $cancelled = fake()->boolean(50);
+		//         $returnDeposit = !$cancelled && fake()->boolean(50);
 
-                DepositAccount::create([
-                    'name' => fake()->name,
-                    'account_id' => $account->id,
-                    'deposit_amount' => $deposit = fake()->numberBetween(5000, 20000),
-                    'gave_account' => fake()->boolean(),
-                    'deposit_date' => $account->bought_date,
-                    'cancelled' => $cancelled,
-                    'return_deposit' => $returnDeposit,
-                    'return_deposit_amount' => $returnDeposit ? fake()->numberBetween(1000, $deposit) : 0,
-                ]);
-            }
-        });
-    }
+		//         DepositAccount::create([
+		//             'name' => fake()->name,
+		//             'account_id' => $account->id,
+		//             'deposit_amount' => $deposit = fake()->numberBetween(5000, 20000),
+		//             'gave_account' => fake()->boolean(),
+		//             'deposit_date' => $account->bought_date,
+		//             'cancelled' => $cancelled,
+		//             'return_deposit' => $returnDeposit,
+		//             'return_deposit_amount' => $returnDeposit ? fake()->numberBetween(1000, $deposit) : 0,
+		//         ]);
+		//     }
+		// });
+	}
 }
