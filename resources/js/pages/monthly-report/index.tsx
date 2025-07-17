@@ -29,7 +29,7 @@ const Index = ({ accounts }: Props) => {
 	return (
 		<AppLayout breadcrumbs={breadcrumbs}>
 			<Head title="Monthly Report" />
-			<div className="space-y-4 p-6">
+			<div className="space-y-4 p-4">
 				<Heading title="Monthly Report" description="The monthly reports of the Accounts." />
 				{/* Trading Overview */}
 				<div className="rounded-xl border border-white/20 p-6">

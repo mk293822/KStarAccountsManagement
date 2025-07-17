@@ -64,7 +64,7 @@ const MonthlyAccounts = ({ accounts }: Props) => {
 	};
 
 	return (
-		<div className="overflow-x-auto rounded-xl border border-white/20 p-4">
+		<div className="overflow-x-auto">
 			<div className="flex flex-row items-center justify-between">
 				<Heading title="Accounts" />
 				<div className="mb-4 flex flex-row items-center justify-center gap-2 py-2">
