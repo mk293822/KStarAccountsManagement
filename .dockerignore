@@ -15,7 +15,7 @@
 /vendor
 
 # Environment files
-.env*
+.env
 auth.json
 
 # IDE/editor configs
