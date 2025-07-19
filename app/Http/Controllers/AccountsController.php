@@ -94,15 +94,15 @@ class AccountsController extends Controller
     public function show(string $id)
     {
         $get_account = Account::with([
-            'returnedAccount',
-            'depositAccount',
+			'returnedAccounts',
+			'depositAccounts',
             'soldBy:id,name',
             'boughtBy:id,name',
         ])->findOrFail($id);
 
-        $account = new AccountResource($get_account);
+		$account = new AccountResource($get_account)->resolve();
 
-        return Inertia::render('accounts/show', compact('account'));
+		return Inertia::render('accounts/show', compact('account'));
     }
 
     /**
@@ -111,10 +111,10 @@ class AccountsController extends Controller
     public function edit(string $id)
     {
         $get_account = Account::with([
-            'returnedAccount',
-            'depositAccount',
+			'returnedAccounts',
+			'depositAccounts',
             'soldBy:id,name',
-            'boughtBy:id,name',
+			'boughtBy:id,name'
         ])->findOrFail($id);
 
         $account = new AccountResource($get_account);

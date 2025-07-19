@@ -42,14 +42,14 @@ class Account extends Model
         ];
     }
 
-    public function returnedAccount()
+	public function returnedAccounts()
     {
-        return $this->hasOne(ReturnedAccount::class);
+		return $this->hasMany(ReturnedAccount::class);
     }
 
-    public function depositAccount()
+	public function depositAccounts()
     {
-        return $this->hasOne(DepositAccount::class);
+		return $this->hasMany(DepositAccount::class);
     }
 
 

@@ -41,8 +41,12 @@ class AccountResource extends JsonResource
             'bought_date' => $this->bought_date?->toDateString(),
             'sold_date' => $this->sold_date?->toDateString(),
 
-            'returned_account' => new ReturnedAccountResource($this->whenLoaded('returnedAccount')),
-            'deposit_account' => new DepositAccountResource($this->whenLoaded('depositAccount')),
+			'returned_accounts' => $this->whenLoaded('returnedAccounts', function () {
+				return $this->returnedAccounts->map(fn($account) => new ReturnedAccountResource($account));
+			}),
+			'deposit_accounts' =>  $this->whenLoaded('depositAccounts', function () {
+				return $this->depositAccounts->map(fn($account) => new DepositAccountResource($account));
+			}),
         ];
     }
 }

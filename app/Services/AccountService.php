@@ -130,7 +130,7 @@ class AccountService {
         try {
             $account = Account::findOrFail($id);
 
-            $account->returnedAccount()->create([
+			$account->returnedAccounts()->create([
                 ...$validated,
                 'name' => $account->buyer_name,
                 'sold_price' => $account->sold_price,
@@ -163,7 +163,7 @@ class AccountService {
         try {
             $account = Account::findOrFail($id);
 
-            $account->depositAccount()->create($validated);
+			$account->depositAccounts()->create($validated);
 
             $account->is_deposit = true;
             $account->save();

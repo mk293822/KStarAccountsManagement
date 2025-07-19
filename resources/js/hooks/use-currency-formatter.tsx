@@ -1,11 +1,11 @@
 import { useMemo } from 'react';
 
-export function useCurrencyFormatter(currency = 'USD', locale = navigator.language) {
+export function useCurrencyFormatter(locale = navigator.language) {
 	return useMemo(() => {
 		return (amount: number) =>
 			new Intl.NumberFormat(locale, {
 				style: 'currency',
-				currency,
+				currency: import.meta.env.VITE_CURRENCY_FORMAT,
 			}).format(amount);
-	}, [currency, locale]);
+	}, [locale]);
 }

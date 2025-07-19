@@ -1,7 +1,7 @@
-import { Account } from '@/types';
+import { DepositAccount } from '@/types';
 import { useForm } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
-import { FormEventHandler } from 'react';
+import { FormEventHandler, useEffect } from 'react';
 import Heading from '../heading';
 import InputError from '../input-error';
 import { Button } from '../ui/button';
@@ -11,37 +11,47 @@ import { Label } from '../ui/label';
 import Modal from '../ui/modal';
 
 type Props = {
-    show: boolean;
-    onClose: () => void;
-    account: Account;
+	show: boolean;
+	onClose: () => void;
+	account?: DepositAccount;
+	is_deposit?: boolean;
+	th_level: number;
+	account_name: string;
+	account_email: string;
+	id: number;
 };
 
 type ReturnForm = {
-    name: string;
-    deposit_amount: number;
-    deposit_date: string;
-    gave_account: boolean;
+	name: string;
+	deposit_amount: number;
+	deposit_date: string;
+	gave_account: boolean;
 };
 
-const DepositModal = ({ show, onClose, account }: Props) => {
-    const { data, setData, post, processing, errors } = useForm<Required<ReturnForm>>({
-        name: account.is_deposit && account.deposit_account?.name ? account.deposit_account.name : '',
-        deposit_amount:
-            account.is_deposit && typeof account.deposit_account?.deposit_amount === 'number' ? account.deposit_account.deposit_amount : 0,
-        deposit_date:
-            account.is_deposit && account.deposit_account?.deposit_date
-                ? account.deposit_account.deposit_date
-                : new Date().toISOString().split('T')[0],
-        gave_account: account.is_deposit && typeof account.deposit_account?.gave_account === 'boolean' ? account.deposit_account.gave_account : false,
-    });
+const DepositModal = ({ show, onClose, account, id, is_deposit = false, th_level, account_email, account_name }: Props) => {
+	const { data, setData, post, processing, errors } = useForm<Required<ReturnForm>>({
+		name: is_deposit && account?.name ? account.name : '',
+		deposit_amount: is_deposit && typeof account?.deposit_amount === 'number' ? account.deposit_amount : 0,
+		deposit_date: is_deposit && account?.deposit_date ? account.deposit_date : new Date().toISOString().split('T')[0],
+		gave_account: is_deposit && typeof account?.gave_account === 'boolean' ? account.gave_account : false,
+	});
 
-    const submit: FormEventHandler = (e) => {
-        e.preventDefault();
-        post(route('account.deposit', account.id));
-        onClose();
-    };
+	useEffect(() => {
+		setData({
+			name: is_deposit && account?.name ? account.name : '',
+			deposit_amount: is_deposit && typeof account?.deposit_amount === 'number' ? account.deposit_amount : 0,
+			deposit_date: is_deposit && account?.deposit_date ? account.deposit_date : new Date().toISOString().split('T')[0],
+			gave_account: is_deposit && typeof account?.gave_account === 'boolean' ? account.gave_account : false,
+		});
+	}, [is_deposit, account, setData]);
 
-    return (
+	const submit: FormEventHandler = (e) => {
+		e.preventDefault();
+		post(route('account.deposit', id));
+		onClose();
+	};
+
+	return (
 		<Modal show={show} onClose={onClose} closeable={false}>
 			<div className="mx-auto w-full max-w-2xl rounded-2xl border border-white/20 bg-white/10 p-6 text-white shadow-xl backdrop-blur-md">
 				<Heading title="Deposit Account" description="Enter your details to create a deposit account." />
@@ -49,11 +59,11 @@ const DepositModal = ({ show, onClose, account }: Props) => {
 				<div className="hide-scrollbar grid max-h-[70vh] grid-cols-1 gap-4 overflow-y-auto sm:max-h-[100vh] sm:grid-cols-2">
 					<div className="sm:col-span-2">
 						<Label htmlFor="acc_email">Account Email</Label>
-						<Input id="acc_email" className="border-gray-200" placeholder="Account Email" disabled value={account.account_email} />
+						<Input id="acc_email" className="border-gray-200" placeholder="Account Email" disabled value={account_email} />
 					</div>
 					<div>
 						<Label htmlFor="acc_name">Account Name</Label>
-						<Input id="acc_name" placeholder="Account Name" className="border-gray-200" disabled autoFocus value={account.account_name} />
+						<Input id="acc_name" placeholder="Account Name" className="border-gray-200" disabled autoFocus value={account_name} />
 					</div>
 					<div>
 						<Label htmlFor="th_level">Town Hall Level</Label>
@@ -64,7 +74,7 @@ const DepositModal = ({ show, onClose, account }: Props) => {
 							placeholder="Town Hall Level"
 							disabled
 							min={0}
-							value={account.th_level}
+							value={th_level}
 						/>
 					</div>
 				</div>

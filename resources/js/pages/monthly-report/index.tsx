@@ -1,6 +1,6 @@
 import Heading from '@/components/heading';
 import MonthlyAccounts from '@/components/monthly-report-components/monthly-accounts';
-import { useCurrencyFormatter } from '@/hooks/useCurrencyFormatter';
+import { useCurrencyFormatter } from '@/hooks/use-currency-formatter';
 import AppLayout from '@/layouts/app-layout';
 import { Account, BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
@@ -22,7 +22,7 @@ type Props = {
 };
 
 const Index = ({ accounts }: Props) => {
-	const currencyFormatter = useCurrencyFormatter('MMK');
+	const currencyFormatter = useCurrencyFormatter();
 	const totalBoughtPrice = accounts.data.reduce((total, account) => total + account.bought_price, 0);
 	const totalSoldPrice = accounts.data.reduce((total, account) => total + (account.sold_price ?? 0), 0);
 

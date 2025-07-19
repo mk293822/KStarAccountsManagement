@@ -8,7 +8,7 @@ import { useState } from 'react';
 import SoldModal from './sold-modal';
 import ReturnModal from './return-modal';
 import DepositModal from './deposit-modal';
-import { useCurrencyFormatter } from '@/hooks/useCurrencyFormatter';
+import { useCurrencyFormatter } from '@/hooks/use-currency-formatter';
 
 type AccountCardProps = {
 	account: Account;
@@ -23,7 +23,7 @@ export default function AccountCard({ account, index, onToggle, isOpen }: Accoun
 	const [openSoldModal, setOpenSoldModal] = useState(false);
 	const [openDepositModal, setOpenDepositModal] = useState(false);
 	const [openReturnModal, setOpenReturnModal] = useState(false);
-	const currencyFormatter = useCurrencyFormatter('MMK');
+	const currencyFormatter = useCurrencyFormatter();
 
 	return (
 		<>
@@ -132,9 +132,27 @@ export default function AccountCard({ account, index, onToggle, isOpen }: Accoun
 			</Collapsible>
 
 			{/* Modals */}
-			<SoldModal show={openSoldModal} onClose={() => setOpenSoldModal(false)} account={account} />
-			<ReturnModal show={openReturnModal} onClose={() => setOpenReturnModal(false)} account={account} />
-			<DepositModal show={openDepositModal} onClose={() => setOpenDepositModal(false)} account={account} />
+			{account.id && (
+				<>
+					<SoldModal show={openSoldModal} onClose={() => setOpenSoldModal(false)} account={account} />
+					<ReturnModal
+						id={account.id}
+						show={openReturnModal}
+						onClose={() => setOpenReturnModal(false)}
+						account_email={account.account_email}
+						account_name={account.account_name}
+						th_level={account.th_level}
+					/>
+					<DepositModal
+						id={account.id}
+						show={openDepositModal}
+						onClose={() => setOpenDepositModal(false)}
+						account_email={account.account_email}
+						account_name={account.account_name}
+						th_level={account.th_level}
+					/>
+				</>
+			)}
 		</>
 	);
 }
