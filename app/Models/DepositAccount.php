@@ -15,8 +15,7 @@ class DepositAccount extends Model
         'deposit_amount',
         'gave_account',
         'deposit_date',
-        'cancelled',
-        'return_deposit',
+		'cancelled',
         'return_deposit_amount',
         'cancelled_date'
     ];

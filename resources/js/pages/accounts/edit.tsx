@@ -279,14 +279,14 @@ const Edit = ({ account }: Props) => {
 								onClick={() => setshowDepositListModal(!showDepositListModal)}
 								className="rounded border border-blue-500 bg-transparent px-4 py-0.5 text-white hover:bg-blue-500"
 							>
-								Deposit
+								Deposits
 							</button>
 							<button
 								type="button"
 								onClick={() => setshowReturnListModal(!showReturnListModal)}
 								className="rounded border border-green-500 bg-transparent px-4 py-0.5 text-white hover:bg-green-500"
 							>
-								Return
+								Returns
 							</button>
 							<Button type="submit" className="w-28" disabled={processing}>
 								{processing && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
@@ -305,6 +305,8 @@ const Edit = ({ account }: Props) => {
 				show={showDepositListModal}
 				onClose={() => setshowDepositListModal(false)}
 				accounts={account.deposit_accounts}
+				is_deposit={account.is_deposit}
+				is_sold={account.is_sold}
 			/>
 			<ReturnListModal
 				th_level={account.th_level}
@@ -314,6 +316,8 @@ const Edit = ({ account }: Props) => {
 				show={showReturnListModal}
 				onClose={() => setshowReturnListModal(false)}
 				accounts={account.returned_accounts}
+				is_deposit={account.is_deposit}
+				is_returned={account.is_returned}
 			/>
 		</>
 	);

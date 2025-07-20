@@ -14,36 +14,36 @@ type Props = {
 	show: boolean;
 	onClose: () => void;
 	account?: DepositAccount;
-	is_deposit?: boolean;
+	is_Edit?: boolean;
 	th_level: number;
 	account_name: string;
 	account_email: string;
 	id: number;
 };
 
-type ReturnForm = {
+type DepositForm = {
 	name: string;
 	deposit_amount: number;
 	deposit_date: string;
 	gave_account: boolean;
 };
 
-const DepositModal = ({ show, onClose, account, id, is_deposit = false, th_level, account_email, account_name }: Props) => {
-	const { data, setData, post, processing, errors } = useForm<Required<ReturnForm>>({
-		name: is_deposit && account?.name ? account.name : '',
-		deposit_amount: is_deposit && typeof account?.deposit_amount === 'number' ? account.deposit_amount : 0,
-		deposit_date: is_deposit && account?.deposit_date ? account.deposit_date : new Date().toISOString().split('T')[0],
-		gave_account: is_deposit && typeof account?.gave_account === 'boolean' ? account.gave_account : false,
+const DepositModal = ({ show, onClose, account, id, is_Edit = false, th_level, account_email, account_name }: Props) => {
+	const { data, setData, post, processing, errors } = useForm<DepositForm>({
+		name: is_Edit && account?.name ? account.name : '',
+		deposit_amount: is_Edit && typeof account?.deposit_amount === 'number' ? account.deposit_amount : 0,
+		deposit_date: is_Edit && account?.deposit_date ? account.deposit_date : new Date().toISOString().split('T')[0],
+		gave_account: is_Edit && typeof account?.gave_account === 'boolean' ? account.gave_account : false,
 	});
 
 	useEffect(() => {
 		setData({
-			name: is_deposit && account?.name ? account.name : '',
-			deposit_amount: is_deposit && typeof account?.deposit_amount === 'number' ? account.deposit_amount : 0,
-			deposit_date: is_deposit && account?.deposit_date ? account.deposit_date : new Date().toISOString().split('T')[0],
-			gave_account: is_deposit && typeof account?.gave_account === 'boolean' ? account.gave_account : false,
+			name: is_Edit && account?.name ? account.name : '',
+			deposit_amount: is_Edit && typeof account?.deposit_amount === 'number' ? account.deposit_amount : 0,
+			deposit_date: is_Edit && account?.deposit_date ? account.deposit_date : new Date().toISOString().split('T')[0],
+			gave_account: is_Edit && typeof account?.gave_account === 'boolean' ? account.gave_account : false,
 		});
-	}, [is_deposit, account, setData]);
+	}, [is_Edit, account, setData]);
 
 	const submit: FormEventHandler = (e) => {
 		e.preventDefault();
@@ -120,6 +120,39 @@ const DepositModal = ({ show, onClose, account, id, is_deposit = false, th_level
 						/>
 						<InputError message={errors.deposit_date} />
 					</div>
+
+					{is_Edit && (
+						<>
+							<div>
+								<Label htmlFor="deposit_amount">Deposit Amount</Label>
+								<Input
+									id="deposit_amount"
+									type="number"
+									className="border-gray-200"
+									placeholder="Deposit Amount"
+									required
+									min={50}
+									value={data.deposit_amount}
+									onChange={(e) => setData('deposit_amount', Number(e.target.value))}
+								/>
+								<InputError message={errors.deposit_amount} />
+							</div>
+							<div>
+								<Label htmlFor="deposit_amount">Deposit Amount</Label>
+								<Input
+									id="deposit_amount"
+									type="number"
+									className="border-gray-200"
+									placeholder="Deposit Amount"
+									required
+									min={50}
+									value={data.deposit_amount}
+									onChange={(e) => setData('deposit_amount', Number(e.target.value))}
+								/>
+								<InputError message={errors.deposit_amount} />
+							</div>
+						</>
+					)}
 
 					<div className="flex items-center space-x-2">
 						<Checkbox

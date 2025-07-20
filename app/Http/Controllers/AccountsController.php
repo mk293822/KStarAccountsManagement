@@ -9,22 +9,14 @@ use App\Http\Requests\AccountReturnRequest;
 use App\Http\Requests\AccountSoldRequest;
 use App\Http\Resources\AccountResource;
 use App\Models\Account;
-use App\Services\AccountService;
-use Exception;
+use App\Services\Contracts\AccountServiceInterface;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
-use IntlChar;
 
 class AccountsController extends Controller
 {
 
-    public $accountService;
-
-    public function __construct(AccountService $account_service)
-    {
-        $this->accountService = $account_service;
-    }
+	public function __construct(protected AccountServiceInterface $accountService) {}
 
     /**
      * Display a listing of the resource.

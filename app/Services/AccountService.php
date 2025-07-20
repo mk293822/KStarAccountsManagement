@@ -7,17 +7,14 @@ use App\Http\Requests\AccountDepositRequest;
 use App\Http\Requests\AccountEditRequest;
 use App\Http\Requests\AccountReturnRequest;
 use App\Http\Requests\AccountSoldRequest;
-use App\Http\Resources\AccountResource;
 use App\Models\Account;
-use App\Models\DepositAccount;
-use App\Models\ReturnedAccount;
+use App\Services\Contracts\AccountServiceInterface;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use phpDocumentor\Reflection\Types\Boolean;
 
-class AccountService {
+class AccountService implements AccountServiceInterface
+{
 
     public function getAccounts(Request $request)
     {
@@ -106,11 +103,17 @@ class AccountService {
 
         try {
             $account = Account::findOrFail($id);
-            $account->fill($validated);
-            $account->sold_by = $request->user()->id;
-            $account->is_sold = true;
 
-            $account->save();
+			if ($account->is_sold === true) {
+				return null;
+			}
+
+			$account->update([
+				...$validated,
+				'sold_by' => $request->user()->id,
+				'is_sold' => true,
+				'is_returned' => false,
+			]);
 
             DB::commit();
 
@@ -129,6 +132,10 @@ class AccountService {
 
         try {
             $account = Account::findOrFail($id);
+
+			if ($account->is_deposit === true || $account->is_returned === true) {
+				return null;
+			}
 
 			$account->returnedAccounts()->create([
                 ...$validated,
@@ -162,6 +169,10 @@ class AccountService {
 
         try {
             $account = Account::findOrFail($id);
+
+			if ($account->is_deposit === true || $account->is_sold === true) {
+				return null;
+			}
 
 			$account->depositAccounts()->create($validated);
 

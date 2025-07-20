@@ -14,7 +14,7 @@ type Props = {
 	show: boolean;
 	onClose: () => void;
 	account?: ReturnedAccount;
-	is_returned?: boolean;
+	is_Edit?: boolean;
 	th_level: number;
 	account_name: string;
 	account_email: string;
@@ -27,11 +27,11 @@ type ReturnForm = {
 	returned_date: string;
 };
 
-const ReturnModal = ({ show, onClose, account, is_returned = false, th_level, account_email, account_name, id }: Props) => {
+const ReturnModal = ({ show, onClose, account, is_Edit = false, th_level, account_email, account_name, id }: Props) => {
 	const { data, setData, post, processing, errors } = useForm<Required<ReturnForm>>({
-		returned_date: is_returned && account?.returned_date ? account.returned_date : new Date().toISOString().split('T')[0],
-		return_price: is_returned && account?.return_price ? account.return_price : 0,
-		is_password_changed: is_returned && account?.is_password_changed ? account.is_password_changed : false,
+		returned_date: is_Edit && account?.returned_date ? account.returned_date : new Date().toISOString().split('T')[0],
+		return_price: is_Edit && account?.return_price ? account.return_price : 0,
+		is_password_changed: is_Edit && account?.is_password_changed ? account.is_password_changed : false,
 	});
 
 	const submit: FormEventHandler = (e) => {
@@ -96,6 +96,35 @@ const ReturnModal = ({ show, onClose, account, is_returned = false, th_level, ac
 						/>
 						<InputError message={errors.returned_date} />
 					</div>
+
+					{is_Edit && (
+						<>
+							<div>
+								<Label htmlFor="returned_date">Return Date</Label>
+								<Input
+									className="border-gray-200"
+									id="returned_date"
+									type="date"
+									required
+									value={data.returned_date}
+									onChange={(e) => setData('returned_date', e.target.value)}
+								/>
+								<InputError message={errors.returned_date} />
+							</div>
+							<div>
+								<Label htmlFor="returned_date">Return Date</Label>
+								<Input
+									className="border-gray-200"
+									id="returned_date"
+									type="date"
+									required
+									value={data.returned_date}
+									onChange={(e) => setData('returned_date', e.target.value)}
+								/>
+								<InputError message={errors.returned_date} />
+							</div>
+						</>
+					)}
 
 					<div className="flex items-center space-x-2">
 						<Checkbox

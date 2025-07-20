@@ -19,7 +19,6 @@ class ReturnedAccountFactory extends Factory
         return [
 			'name' => fake()->name,
 			'is_password_changed' => fake()->boolean(90),
-			'returned_date' => $account->sold_date ?? now(),
         ];
     }
 }

@@ -17,14 +17,13 @@ class DepositAccountFactory extends Factory
 	public function definition(): array
 	{
 		$cancelled = fake()->boolean(50);
-		$returnDeposit = !$cancelled && fake()->boolean(50);
+		$returnDeposit = $cancelled && fake()->boolean(50);
 		$deposit = fake()->numberBetween(5000, 20000);
 		return [
 			'name' => fake()->name,
 			'deposit_amount' => $deposit,
 			'gave_account' => fake()->boolean(),
 			'cancelled' => $cancelled,
-			'return_deposit' => $returnDeposit,
 			'return_deposit_amount' => $returnDeposit ? fake()->numberBetween(1000, $deposit) : 0,
 		];
 	}
