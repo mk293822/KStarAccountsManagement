@@ -19,6 +19,7 @@ type Props = {
 	account_name: string;
 	account_email: string;
 	id: number;
+	allCancelled: boolean;
 };
 
 type DepositForm = {
@@ -26,14 +27,18 @@ type DepositForm = {
 	deposit_amount: number;
 	deposit_date: string;
 	gave_account: boolean;
+	cancelled?: boolean | null;
+	return_deposit_amount?: number | null;
 };
 
-const DepositModal = ({ show, onClose, account, id, is_Edit = false, th_level, account_email, account_name }: Props) => {
+const DepositModal = ({ show, onClose, allCancelled, account, id, is_Edit = false, th_level, account_email, account_name }: Props) => {
 	const { data, setData, post, processing, errors } = useForm<DepositForm>({
 		name: is_Edit && account?.name ? account.name : '',
 		deposit_amount: is_Edit && typeof account?.deposit_amount === 'number' ? account.deposit_amount : 0,
 		deposit_date: is_Edit && account?.deposit_date ? account.deposit_date : new Date().toISOString().split('T')[0],
 		gave_account: is_Edit && typeof account?.gave_account === 'boolean' ? account.gave_account : false,
+		cancelled: allCancelled ? account?.cancelled : null,
+		return_deposit_amount: allCancelled ? account?.return_deposit_amount : null,
 	});
 
 	useEffect(() => {
@@ -42,13 +47,26 @@ const DepositModal = ({ show, onClose, account, id, is_Edit = false, th_level, a
 			deposit_amount: is_Edit && typeof account?.deposit_amount === 'number' ? account.deposit_amount : 0,
 			deposit_date: is_Edit && account?.deposit_date ? account.deposit_date : new Date().toISOString().split('T')[0],
 			gave_account: is_Edit && typeof account?.gave_account === 'boolean' ? account.gave_account : false,
+			cancelled: allCancelled ? account?.cancelled : null,
+			return_deposit_amount: allCancelled ? account?.return_deposit_amount : null,
 		});
-	}, [is_Edit, account, setData]);
+	}, [is_Edit, account, setData, allCancelled]);
 
 	const submit: FormEventHandler = (e) => {
 		e.preventDefault();
-		post(route('account.deposit', id));
-		onClose();
+		if (is_Edit) {
+			post(route('account.edit_deposit', account?.id), {
+				onSuccess: () => {
+					onClose();
+				},
+			});
+		} else {
+			post(route('account.deposit', id), {
+				onSuccess: () => {
+					onClose();
+				},
+			});
+		}
 	};
 
 	return (
@@ -122,36 +140,36 @@ const DepositModal = ({ show, onClose, account, id, is_Edit = false, th_level, a
 					</div>
 
 					{is_Edit && (
-						<>
-							<div>
-								<Label htmlFor="deposit_amount">Deposit Amount</Label>
-								<Input
-									id="deposit_amount"
-									type="number"
-									className="border-gray-200"
-									placeholder="Deposit Amount"
-									required
-									min={50}
-									value={data.deposit_amount}
-									onChange={(e) => setData('deposit_amount', Number(e.target.value))}
-								/>
-								<InputError message={errors.deposit_amount} />
-							</div>
-							<div>
-								<Label htmlFor="deposit_amount">Deposit Amount</Label>
-								<Input
-									id="deposit_amount"
-									type="number"
-									className="border-gray-200"
-									placeholder="Deposit Amount"
-									required
-									min={50}
-									value={data.deposit_amount}
-									onChange={(e) => setData('deposit_amount', Number(e.target.value))}
-								/>
-								<InputError message={errors.deposit_amount} />
-							</div>
-						</>
+						<div>
+							{data.cancelled && (
+								<>
+									<Label htmlFor="return_deposit_amount">Returned Deposit Amount</Label>
+									<Input
+										id="return_deposit_amount"
+										type="number"
+										className="border-gray-200"
+										placeholder="Deposit Amount"
+										required
+										min={0}
+										value={data.return_deposit_amount ?? ''}
+										onChange={(e) => setData('return_deposit_amount', Number(e.target.value))}
+									/>
+									<InputError message={errors.return_deposit_amount} />
+								</>
+							)}
+						</div>
+					)}
+
+					{is_Edit && (allCancelled || !account?.cancelled) && (
+						<div className="flex items-center space-x-2">
+							<Checkbox
+								className="border-gray-200"
+								id="cancelled"
+								checked={data.cancelled ?? false}
+								onClick={() => setData('cancelled', !data.cancelled)}
+							/>
+							<Label htmlFor="cancelled">Cancelled</Label>
+						</div>
 					)}
 
 					<div className="flex items-center space-x-2">
@@ -164,7 +182,7 @@ const DepositModal = ({ show, onClose, account, id, is_Edit = false, th_level, a
 						<Label htmlFor="gave_account">Account is Given</Label>
 					</div>
 
-					<div className="flex justify-end gap-4 pt-8 sm:col-span-2">
+					<div className="flex justify-end gap-4 pt-4 sm:col-span-2">
 						<Button type="button" variant={'ghost'} onClick={onClose} className="w-28 border border-gray-400">
 							Cancel
 						</Button>

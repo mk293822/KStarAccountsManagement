@@ -7,8 +7,8 @@ import { Pencil, Trash } from 'lucide-react';
 type Props = {
 	acc: ReturnedAccount;
 	isEdit?: boolean;
-	onDelete: () => void;
-	onEdit: () => void;
+	onDelete?: () => void;
+	onEdit?: () => void;
 };
 
 const ReturnCard = ({ acc, isEdit = false, onDelete, onEdit }: Props) => {

@@ -100,12 +100,14 @@ export default function AccountCard({ account, index, onToggle, isOpen }: Accoun
 						)}
 						{!account.is_sold && !account.is_deposit && (
 							<>
-								<button
-									onClick={() => setOpenSoldModal(!openSoldModal)}
-									className="rounded border border-red-500 bg-transparent px-4 py-0.5 text-white hover:bg-red-500"
-								>
-									Sold
-								</button>
+								{!account.is_returned && (
+									<button
+										onClick={() => setOpenSoldModal(!openSoldModal)}
+										className="rounded border border-red-500 bg-transparent px-4 py-0.5 text-white hover:bg-red-500"
+									>
+										Sold
+									</button>
+								)}
 								<button
 									onClick={() => setOpenDepositModal(!openDepositModal)}
 									className="rounded border border-blue-500 bg-transparent px-4 py-0.5 text-white hover:bg-blue-500"
@@ -132,7 +134,7 @@ export default function AccountCard({ account, index, onToggle, isOpen }: Accoun
 			</Collapsible>
 
 			{/* Modals */}
-			{account.id && (
+			{!!account.id && (
 				<>
 					<SoldModal show={openSoldModal} onClose={() => setOpenSoldModal(false)} account={account} />
 					<ReturnModal

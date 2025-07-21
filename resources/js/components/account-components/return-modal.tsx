@@ -1,7 +1,7 @@
 import { ReturnedAccount } from '@/types';
 import { useForm } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
-import { FormEventHandler } from 'react';
+import { FormEventHandler, useEffect } from 'react';
 import Heading from '../heading';
 import InputError from '../input-error';
 import { Button } from '../ui/button';
@@ -28,16 +28,35 @@ type ReturnForm = {
 };
 
 const ReturnModal = ({ show, onClose, account, is_Edit = false, th_level, account_email, account_name, id }: Props) => {
-	const { data, setData, post, processing, errors } = useForm<Required<ReturnForm>>({
+	const { data, setData, post, processing, errors } = useForm<ReturnForm>({
+		return_price: is_Edit && account && account?.return_price > 0 ? account?.return_price : 0,
 		returned_date: is_Edit && account?.returned_date ? account.returned_date : new Date().toISOString().split('T')[0],
-		return_price: is_Edit && account?.return_price ? account.return_price : 0,
 		is_password_changed: is_Edit && account?.is_password_changed ? account.is_password_changed : false,
 	});
 
+	useEffect(() => {
+		setData({
+			return_price: is_Edit && account && account?.return_price > 0 ? account?.return_price : 0,
+			returned_date: is_Edit && account?.returned_date ? account.returned_date : new Date().toISOString().split('T')[0],
+			is_password_changed: is_Edit && account?.is_password_changed ? account.is_password_changed : false,
+		});
+	}, [account, is_Edit, setData]);
+
 	const submit: FormEventHandler = (e) => {
 		e.preventDefault();
-		post(route('account.return', id));
-		onClose();
+		if (is_Edit) {
+			post(route('account.edit_return', account?.id), {
+				onSuccess: () => {
+					onClose();
+				},
+			});
+		} else {
+			post(route('account.return', id), {
+				onSuccess: () => {
+					onClose();
+				},
+			});
+		}
 	};
 
 	return (
@@ -66,6 +85,18 @@ const ReturnModal = ({ show, onClose, account, is_Edit = false, th_level, accoun
 							value={th_level}
 						/>
 					</div>
+					{is_Edit && (
+						<>
+							<div>
+								<Label htmlFor="re_name">Returned By</Label>
+								<Input id="re_name" className="border-gray-200" disabled autoFocus value={account?.name} />
+							</div>
+							<div>
+								<Label htmlFor="sold_price">Sold Price</Label>
+								<Input id="sold_price" type="number" className="border-gray-200" disabled min={0} value={account?.sold_price} />
+							</div>
+						</>
+					)}
 				</div>
 
 				<form className="mt-2 grid grid-cols-1 gap-4 sm:grid-cols-2" onSubmit={submit}>
@@ -96,35 +127,6 @@ const ReturnModal = ({ show, onClose, account, is_Edit = false, th_level, accoun
 						/>
 						<InputError message={errors.returned_date} />
 					</div>
-
-					{is_Edit && (
-						<>
-							<div>
-								<Label htmlFor="returned_date">Return Date</Label>
-								<Input
-									className="border-gray-200"
-									id="returned_date"
-									type="date"
-									required
-									value={data.returned_date}
-									onChange={(e) => setData('returned_date', e.target.value)}
-								/>
-								<InputError message={errors.returned_date} />
-							</div>
-							<div>
-								<Label htmlFor="returned_date">Return Date</Label>
-								<Input
-									className="border-gray-200"
-									id="returned_date"
-									type="date"
-									required
-									value={data.returned_date}
-									onChange={(e) => setData('returned_date', e.target.value)}
-								/>
-								<InputError message={errors.returned_date} />
-							</div>
-						</>
-					)}
 
 					<div className="flex items-center space-x-2">
 						<Checkbox

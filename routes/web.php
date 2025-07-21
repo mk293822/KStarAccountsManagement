@@ -17,10 +17,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('accounts/{id}', [AccountsController::class, 'show'])->name('account.show');
     Route::post('accounts/update/{id}', [AccountsController::class, 'update'])->name('account.update');
     Route::post('accounts/sold/{id}', [AccountsController::class, 'sold'])->name('account.sold');
-    Route::post('accounts/return/{id}', [AccountsController::class, 'return'])->name('account.return');
-    Route::post('accounts/deposit/{id}', [AccountsController::class, 'deposit'])->name('account.deposit');
-    Route::delete('accounts/destroy/{id}', [AccountsController::class, 'destroy'])->name('account.destroy');
-    Route::get('accounts/edit/{id}', [AccountsController::class, 'edit'])->name('account.edit');
+	Route::get('accounts/edit/{id}', [AccountsController::class, 'edit'])->name('account.edit');
+	Route::delete('accounts/destroy/{id}', [AccountsController::class, 'destroy'])->name('account.destroy');
+
+	Route::post('accounts/return/{id}', [AccountsController::class, 'return'])->name('account.return');
+	Route::post('accounts/edit_return/{id}', [AccountsController::class, 'edit_return'])->name('account.edit_return');
+	Route::delete('accounts/destroy_return/{id}', [AccountsController::class, 'destroy_return'])->name('account.destroy_return');
+
+	Route::post('accounts/deposit/{id}', [AccountsController::class, 'deposit'])->name('account.deposit');
+	Route::post('accounts/edit_deposit/{id}', [AccountsController::class, 'edit_deposit'])->name('account.edit_deposit');
+	Route::delete('accounts/destroy_deposit/{id}', [AccountsController::class, 'destroy_deposit'])->name('account.destroy_deposit');
 
 	// Monthly Report Routes
 	Route::get('monthly-report', [MonthlyReportController::class, 'index'])->name('monthly_report');

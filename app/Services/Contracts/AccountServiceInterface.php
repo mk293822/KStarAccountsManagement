@@ -14,8 +14,13 @@ interface AccountServiceInterface {
 	public function getAccounts(Request $request);
 	public function create(AccountCreateRequest $request);
 	public function update(AccountEditRequest $request, $id);
-
 	public function sold(AccountSoldRequest $request, $id);
+
 	public function deposit(AccountDepositRequest $request, $id);
+	public function editDeposit(Request $request, $id);
+	public function destroyDeposit($id);
+
 	public function return(AccountReturnRequest $request, $id);
+	public function editReturn(AccountReturnRequest $request, $id);
+	public function destroyReturn($id);
 }

@@ -318,6 +318,7 @@ const Edit = ({ account }: Props) => {
 				accounts={account.returned_accounts}
 				is_deposit={account.is_deposit}
 				is_returned={account.is_returned}
+				is_sold={account.is_sold}
 			/>
 		</>
 	);

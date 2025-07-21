@@ -8,17 +8,16 @@ import { Pencil, Trash } from 'lucide-react';
 type Props = {
 	acc: DepositAccount;
 	isEdit?: boolean;
-	onDelete: () => void;
-	onEdit: () => void;
-}
+	onDelete?: () => void;
+	onEdit?: () => void;
+};
 
 const DepositCard = ({ acc, isEdit, onDelete, onEdit }: Props) => {
-
 	const currencyFormatter = useCurrencyFormatter();
 
-  return (
+	return (
 		<SectionCard color="green">
-			<div className="mb-4 flex gap-2 flex-row items-center justify-between">
+			<div className="mb-4 flex flex-row items-center justify-between gap-2">
 				<h3 className="text-lg font-semibold text-green-300">{!isEdit && 'Deposit'} Account Info</h3>
 				{isEdit && (
 					<div className="flex justify-end gap-1">
@@ -39,6 +38,7 @@ const DepositCard = ({ acc, isEdit, onDelete, onEdit }: Props) => {
 				<Info label="Return Deposit Amount" value={`${currencyFormatter(acc.return_deposit_amount)}`} />
 				<Info label="Deposited Date" value={new Date(acc.deposit_date).toLocaleDateString()} />
 			</div>
+			{acc.cancelled && <Info label="Cancelled Date" value={new Date(acc.cancelled_date).toLocaleDateString()} />}
 			<div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-3">
 				<div
 					className={`rounded-full px-3 py-1 text-xs font-semibold text-white shadow ${!acc.cancelled ? 'bg-green-600' : 'bg-red-600/70 text-gray-300'}`}
@@ -53,7 +53,7 @@ const DepositCard = ({ acc, isEdit, onDelete, onEdit }: Props) => {
 				<Flag label="Gave Account" value={!!acc.gave_account} />
 			</div>
 		</SectionCard>
-  );
-}
+	);
+};
 
 export default DepositCard

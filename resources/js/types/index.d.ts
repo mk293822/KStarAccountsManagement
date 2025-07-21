@@ -85,15 +85,16 @@ export interface ReturnedAccount {
 }
 
 export interface DepositAccount {
-    id: number;
-    account_id: number;
-    name: string;
-    deposit_amount: number;
-    gave_account: string;
-    deposit_date: string;
-    cancelled: boolean;
-    return_deposit: boolean;
-    return_deposit_amount: number;
+	id: number;
+	account_id: number;
+	name: string;
+	deposit_amount: number;
+	gave_account: string;
+	deposit_date: string;
+	cancelled: boolean;
+	return_deposit: boolean;
+	return_deposit_amount: number;
+	cancelled_date: string;
 }
 
 export interface AccountCreateForm {

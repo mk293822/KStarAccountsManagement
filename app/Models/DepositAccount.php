@@ -25,6 +25,8 @@ class DepositAccount extends Model
         return [
             'deposit_date' => 'date',
             'cancelled_date' => 'date',
+			'cancelled' => 'boolean',
+			'gave_account' => 'boolean'
         ];
     }
 

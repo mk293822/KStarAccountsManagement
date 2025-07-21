@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Account extends Model
 {
 
-    use HasFactory;
+	use HasFactory;
 
     protected $fillable = [
         'account_name',
@@ -39,17 +39,33 @@ class Account extends Model
         return [
             'bought_date' => 'date',
             'sold_date' => 'date',
+
+			'is_acc_protection_changed' => 'boolean',
+			'is_sold' => 'boolean',
+			'is_email_changed' => 'boolean',
+			'is_email_disabled' => 'boolean',
+			'is_returned' => 'boolean',
+			'is_deposit' => 'boolean',
         ];
     }
 
+	public function updateIsDepositStatus()
+	{
+		$hasNonCancelledDeposit = $this->depositAccounts()->where('cancelled', false)->exists();
+
+		$this->is_deposit = $hasNonCancelledDeposit;
+
+		$this->save();
+	}
+
 	public function returnedAccounts()
     {
-		return $this->hasMany(ReturnedAccount::class);
+		return $this->hasMany(ReturnedAccount::class)->orderByDesc('returned_date');
     }
 
 	public function depositAccounts()
     {
-		return $this->hasMany(DepositAccount::class);
+		return $this->hasMany(DepositAccount::class)->orderByDesc('deposit_date');
     }
 
 

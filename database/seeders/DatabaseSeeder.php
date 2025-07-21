@@ -30,10 +30,11 @@ class DatabaseSeeder extends Seeder
 
 		Account::factory()->count(1000)->create()->each(function ($account) {
 			if ($account->is_returned) {
+				$sold_price = fake()->numberBetween(5000, min(300000, $account->sold_price ?: 300000));
 				ReturnedAccount::factory()->count(fake()->numberBetween(1, 3))->create([
 					'account_id' => $account->id,
-					'return_price' => fake()->numberBetween(5000, min(300000, $account->sold_price ?: 300000)),
-					'sold_price' => $account->sold_price,
+					'return_price' => fake()->numberBetween(2000, $sold_price),
+					'sold_price' => $sold_price,
 					'returned_date' => $account->sold_date ?? now(),
 				]);
 			}
