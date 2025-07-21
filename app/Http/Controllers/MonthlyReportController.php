@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\AccountResource;
 use App\Models\Account;
-use App\Models\DepositAccount;
-use App\Models\ReturnedAccount;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Inertia\Inertia;
@@ -52,7 +50,7 @@ class MonthlyReportController extends Controller
 		$total_return_deposit_amount = (clone $depositsQuery)->sum('return_deposit_amount');
 
 		$total_returns = (clone $returnsQuery)->count();
-		$total_return_amount = (clone $returnsQuery)->sum('return_price');
+		$total_return_amount = (clone $returnsQuery)->sum('sold_price') - (clone $returnsQuery)->sum('return_price');
 
 		return Inertia::render('monthly-report/index', compact(
 			'accounts',

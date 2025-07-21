@@ -46,7 +46,7 @@ const Index = ({
 }: Props) => {
 	const currencyFormatter = useCurrencyFormatter();
 
-	const totalAmount = total_sold_price + total_deposit_amount - (total_bought_price + total_return_deposit_amount + total_return_amount);
+	const totalAmount = total_sold_price + total_deposit_amount + total_return_amount - (total_bought_price + total_return_deposit_amount);
 
 	return (
 		<AppLayout breadcrumbs={breadcrumbs}>

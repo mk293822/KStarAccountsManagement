@@ -285,6 +285,7 @@ class AccountService implements AccountServiceInterface
 
 			if ($validated['cancelled'] === true) {
 				$deposit_account->cancelled_date = now();
+				$deposit_account->gave_account = false;
 			} else {
 				$deposit_account->cancelled_date = null;
 				$deposit_account->return_deposit_amount = 0;
