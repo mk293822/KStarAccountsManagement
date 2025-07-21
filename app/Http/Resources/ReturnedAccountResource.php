@@ -7,11 +7,13 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class ReturnedAccountResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
+	public static $wrap = false;
+
+	/**
+	 * Transform the resource into an array.
+	 *
+	 * @return array<string, mixed>
+	 */
     public function toArray(Request $request): array
     {
         return [
@@ -19,7 +21,7 @@ class ReturnedAccountResource extends JsonResource
             'account_id' => $this->account_id,
             'sold_price' => $this->sold_price,
             'return_price' => $this->return_price,
-            'is_password_changed' => $this->is_password_changed,
+			'is_password_changed' => (bool) $this->is_password_changed,
             'returned_date' => $this->returned_date?->toDateString(),
             'name' => $this->name
         ];

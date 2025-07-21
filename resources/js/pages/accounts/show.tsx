@@ -1,12 +1,14 @@
-import { Flag, Info, InfoRow, SectionCard, SectionHeader } from '@/components/custom-components';
-import { useCurrencyFormatter } from '@/hooks/useCurrencyFormatter';
+import DepositCard from '@/components/account-components/deposit-card';
+import ReturnCard from '@/components/account-components/return-card';
+import { Flag, InfoRow, SectionHeader } from '@/components/custom-components';
+import { useCurrencyFormatter } from '@/hooks/use-currency-formatter';
 import AppLayout from '@/layouts/app-layout';
 import { Account, BreadcrumbItem } from '@/types';
 import { Link, router } from '@inertiajs/react';
 import axios, { isAxiosError } from 'axios';
 
 const Show = ({ account }: { account: Account }) => {
-	const currencyFormatter = useCurrencyFormatter('MMK');
+	const currencyFormatter = useCurrencyFormatter();
 
 	const breadcrumbs: BreadcrumbItem[] = [
 		{
@@ -135,49 +137,13 @@ const Show = ({ account }: { account: Account }) => {
 					</div>
 				</div>
 
-				{account.returned_account && (
-					<SectionCard color="red">
-						<h3 className="mb-2 text-lg font-semibold text-red-300">Returned Account Info</h3>
-						<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-							<Info label="Return By" value={account.returned_account.name} />
-							<Info label="Return Price" value={`${currencyFormatter(account.returned_account.return_price)}`} />
-						</div>
-						<div className="mt-2 grid grid-cols-1 gap-4 sm:grid-cols-2">
-							<Info label="Sold Price" value={`${currencyFormatter(account.returned_account.sold_price)}`} />
-							<Info label="Return Date" value={new Date(account.returned_account.returned_date).toLocaleDateString()} />
-						</div>
-						<div className="mt-2">
-							<Flag label="Password Changed" value={account.returned_account.is_password_changed} />
-						</div>
-					</SectionCard>
-				)}
+				{account.returned_accounts?.map((acc) => (
+					<ReturnCard key={acc.id} acc={acc} />
+				))}
 
-				{account.deposit_account && (
-					<SectionCard color="green">
-						<h3 className="mb-2 text-lg font-semibold text-green-300">Deposit Account Info</h3>
-						<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-							<Info label="Deposit By" value={account.deposit_account.name} />
-							<Info label="Deposit Amount" value={`${currencyFormatter(account.deposit_account.deposit_amount)}`} />
-						</div>
-						<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-							<Info label="Return Deposit Amount" value={`${currencyFormatter(account.deposit_account.return_deposit_amount)}`} />
-							<Info label="Deposited Date" value={new Date(account.deposit_account.deposit_date).toLocaleDateString()} />
-						</div>
-						<div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-3">
-							<div
-								className={`rounded-full px-3 py-1 text-xs font-semibold text-white shadow ${!account.deposit_account.cancelled ? 'bg-green-600' : 'bg-red-600/70 text-gray-300'}`}
-							>
-								Cancelled Deposit: {account.deposit_account.cancelled ? 'Yes' : 'No'}
-							</div>
-							<div
-								className={`rounded-full px-3 py-1 text-xs font-semibold text-white shadow ${!account.deposit_account.return_deposit ? 'bg-green-600' : 'bg-red-600/70 text-gray-300'}`}
-							>
-								Return Deposit: {account.deposit_account.return_deposit ? 'Yes' : 'No'}
-							</div>
-							<Flag label="Gave Account" value={!!account.deposit_account.gave_account} />
-						</div>
-					</SectionCard>
-				)}
+				{account.deposit_accounts?.map((acc) => (
+					<DepositCard key={acc.id} acc={acc} />
+				))}
 			</div>
 		</AppLayout>
 	);

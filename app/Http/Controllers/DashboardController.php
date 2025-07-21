@@ -9,12 +9,8 @@ use Inertia\Inertia;
 class DashboardController extends Controller
 {
 
-    public $dashboardService;
 
-    public function __construct(DashboardService $dashboard_service)
-    {
-        $this->dashboardService = $dashboard_service;
-    }
+	public function __construct(protected DashboardService $dashboardService) {}
     /**
      * Display a listing of the resource.
      */

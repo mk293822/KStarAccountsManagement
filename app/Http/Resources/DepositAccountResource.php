@@ -7,11 +7,12 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class DepositAccountResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
+	public static $wrap = false;
+	/**
+	 * Transform the resource into an array.
+	 *
+	 * @return array<string, mixed>
+	 */
     public function toArray(Request $request): array
     {
         return [
@@ -19,10 +20,10 @@ class DepositAccountResource extends JsonResource
             'account_id' => $this->account_id,
             'name' => $this->name,
             'deposit_amount' => $this->deposit_amount,
-            'gave_account' => $this->gave_account,
+			'gave_account' => (bool) $this->gave_account,
             'deposit_date' => $this->deposit_date->toDateString(),
-            'cancelled' => $this->cancelled,
-            'return_deposit' => $this->return_deposit,
+			'cancelled' => (bool) $this->cancelled,
+			'return_deposit' => (bool) $this->return_deposit_amount > 0,
             'return_deposit_amount' => $this->return_deposit_amount,
             'cancelled_date' => $this->cancelled_date
         ];

@@ -45,33 +45,33 @@ export interface User {
 
 // account
 export interface Account {
-    id?: number;
-    account_name: string;
-    account_email: string;
-    seller_name: string;
-    buyer_name?: string;
-    th_level: number;
+	id: number;
+	account_name: string;
+	account_email: string;
+	seller_name: string;
+	buyer_name?: string;
+	th_level: number;
 
-    bought_price: number;
-    sold_price?: number;
-    profit?: number;
-    loss?: number;
+	bought_price: number;
+	sold_price?: number;
+	profit?: number;
+	loss?: number;
 
-    is_acc_protection_changed: boolean;
-    is_sold?: boolean;
-    is_email_changed: boolean;
-    is_email_disabled: boolean;
-    is_returned?: boolean;
-    is_deposit?: boolean;
+	is_acc_protection_changed: boolean;
+	is_sold?: boolean;
+	is_email_changed: boolean;
+	is_email_disabled: boolean;
+	is_returned?: boolean;
+	is_deposit?: boolean;
 
-    sold_by?: string;
-    bought_by: string;
+	sold_by?: string;
+	bought_by: string;
 
-    bought_date: string; // ISO 8601 string, e.g. "2025-07-05T13:15:30"
-    sold_date?: string;
+	bought_date: string; // ISO 8601 string, e.g. "2025-07-05T13:15:30"
+	sold_date?: string;
 
-    returned_account?: ReturnedAccount;
-    deposit_account?: DepositAccount;
+	returned_accounts?: ReturnedAccount[];
+	deposit_accounts?: DepositAccount[];
 }
 
 export interface ReturnedAccount {
@@ -85,15 +85,16 @@ export interface ReturnedAccount {
 }
 
 export interface DepositAccount {
-    id: number;
-    account_id: number;
-    name: string;
-    deposit_amount: number;
-    gave_account: string;
-    deposit_date: string;
-    cancelled: boolean;
-    return_deposit: boolean;
-    return_deposit_amount: number;
+	id: number;
+	account_id: number;
+	name: string;
+	deposit_amount: number;
+	gave_account: string;
+	deposit_date: string;
+	cancelled: boolean;
+	return_deposit: boolean;
+	return_deposit_amount: number;
+	cancelled_date: string;
 }
 
 export interface AccountCreateForm {

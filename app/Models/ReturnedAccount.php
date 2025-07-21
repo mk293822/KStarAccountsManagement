@@ -22,6 +22,7 @@ class ReturnedAccount extends Model
     {
         return [
             'returned_date' => 'date',
+			'is_password_changed' => 'boolean',
         ];
     }
 

@@ -1,5 +1,5 @@
-import DepositModal from '@/components/account-components/deposit-modal';
-import ReturnModal from '@/components/account-components/return-modal';
+import DepositListModal from '@/components/account-components/deposit-list-modal';
+import ReturnListModal from '@/components/account-components/return-list-modal';
 import Heading from '@/components/heading';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
@@ -13,47 +13,47 @@ import { LoaderCircle } from 'lucide-react';
 import { FormEventHandler, useState } from 'react';
 
 type Props = {
-    account: Account;
+	account: Account;
 };
 // ...imports remain unchanged
 
 const Edit = ({ account }: Props) => {
-    const breadcrumbs: BreadcrumbItem[] = [
-        { title: 'Account', href: `/accounts` },
-        { title: 'Account Details', href: `/accounts/${account.id}` },
-        { title: 'Account Edit', href: `/accounts/edit/${account.id}` },
-    ];
-    const [showDepositModal, setShowDepositModal] = useState(false);
-    const [showReturnModal, setShowReturnModal] = useState(false);
+	const breadcrumbs: BreadcrumbItem[] = [
+		{ title: 'Account', href: `/accounts` },
+		{ title: 'Account Details', href: `/accounts/${account.id}` },
+		{ title: 'Account Edit', href: `/accounts/edit/${account.id}` },
+	];
+	const [showDepositListModal, setshowDepositListModal] = useState(false);
+	const [showReturnListModal, setshowReturnListModal] = useState(false);
 
-    const { data, setData, post, processing, errors } = useForm<
-        Omit<Required<Account>, 'returned_account' | 'deposit_account' | 'profit' | 'loss' | 'id'>
-    >({
-        account_name: account.account_name,
-        account_email: account.account_email,
-        th_level: account.th_level ?? 0,
-        seller_name: account.seller_name,
-        bought_price: account.bought_price ?? 0,
-        bought_date: account.bought_date,
-        is_acc_protection_changed: account.is_acc_protection_changed,
-        is_email_changed: account.is_email_changed,
-        is_email_disabled: account.is_email_disabled,
-        is_returned: account.is_returned ?? false,
-        is_sold: account.is_sold ?? false,
-        is_deposit: account.is_deposit ?? false,
-        buyer_name: account.is_sold && account.buyer_name?.trim() ? account.buyer_name : '',
-        sold_by: account.is_sold && account.sold_by?.trim() ? account.sold_by : '',
-        bought_by: account.bought_by?.trim() ? account.bought_by : '',
-        sold_price: account.is_sold && typeof account.sold_price === 'number' ? account.sold_price : 0,
-        sold_date: account.sold_date ?? '',
-    });
+	const { data, setData, post, processing, errors } = useForm<
+		Omit<Required<Account>, 'returned_accounts' | 'deposit_accounts' | 'profit' | 'loss' | 'id'>
+	>({
+		account_name: account.account_name,
+		account_email: account.account_email,
+		th_level: account.th_level ?? 0,
+		seller_name: account.seller_name,
+		bought_price: account.bought_price ?? 0,
+		bought_date: account.bought_date,
+		is_acc_protection_changed: account.is_acc_protection_changed,
+		is_email_changed: account.is_email_changed,
+		is_email_disabled: account.is_email_disabled,
+		is_returned: account.is_returned ?? false,
+		is_sold: account.is_sold ?? false,
+		is_deposit: account.is_deposit ?? false,
+		buyer_name: account.is_sold && account.buyer_name?.trim() ? account.buyer_name : '',
+		sold_by: account.is_sold && account.sold_by?.trim() ? account.sold_by : '',
+		bought_by: account.bought_by?.trim() ? account.bought_by : '',
+		sold_price: account.is_sold && typeof account.sold_price === 'number' ? account.sold_price : 0,
+		sold_date: account.sold_date ?? '',
+	});
 
-    const submit: FormEventHandler = (e) => {
-        e.preventDefault();
-        post(route('account.update', account.id));
-    };
+	const submit: FormEventHandler = (e) => {
+		e.preventDefault();
+		post(route('account.update', account.id));
+	};
 
-    return (
+	return (
 		<>
 			<AppLayout breadcrumbs={breadcrumbs}>
 				<Head title="Edit Account" />
@@ -276,17 +276,17 @@ const Edit = ({ account }: Props) => {
 						<div className="flex justify-end gap-4 pt-8">
 							<button
 								type="button"
-								onClick={() => setShowDepositModal(!showDepositModal)}
+								onClick={() => setshowDepositListModal(!showDepositListModal)}
 								className="rounded border border-blue-500 bg-transparent px-4 py-0.5 text-white hover:bg-blue-500"
 							>
-								Deposit
+								Deposits
 							</button>
 							<button
 								type="button"
-								onClick={() => setShowReturnModal(!showReturnModal)}
+								onClick={() => setshowReturnListModal(!showReturnListModal)}
 								className="rounded border border-green-500 bg-transparent px-4 py-0.5 text-white hover:bg-green-500"
 							>
-								Return
+								Returns
 							</button>
 							<Button type="submit" className="w-28" disabled={processing}>
 								{processing && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
@@ -297,8 +297,29 @@ const Edit = ({ account }: Props) => {
 				</div>
 			</AppLayout>
 			{/* Modals */}
-			<DepositModal show={showDepositModal} onClose={() => setShowDepositModal(false)} account={account} />
-			<ReturnModal show={showReturnModal} onClose={() => setShowReturnModal(false)} account={account} />
+			<DepositListModal
+				th_level={account.th_level}
+				id={account.id}
+				account_email={account.account_email}
+				account_name={account.account_name}
+				show={showDepositListModal}
+				onClose={() => setshowDepositListModal(false)}
+				accounts={account.deposit_accounts}
+				is_deposit={account.is_deposit}
+				is_sold={account.is_sold}
+			/>
+			<ReturnListModal
+				th_level={account.th_level}
+				id={account.id}
+				account_email={account.account_email}
+				account_name={account.account_name}
+				show={showReturnListModal}
+				onClose={() => setshowReturnListModal(false)}
+				accounts={account.returned_accounts}
+				is_deposit={account.is_deposit}
+				is_returned={account.is_returned}
+				is_sold={account.is_sold}
+			/>
 		</>
 	);
 };

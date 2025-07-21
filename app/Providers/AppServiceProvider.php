@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Services\AccountService;
+use App\Services\Contracts\AccountServiceInterface;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
@@ -12,7 +14,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+		$this->app->singleton(AccountServiceInterface::class, AccountService::class);
     }
 
     /**
@@ -20,8 +22,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-		if (app()->environment('production')) {
-			URL::forceScheme('https');
-		}
-    }
+		// if (app()->environment('production')) {
+		// 	URL::forceScheme('https');
+		// }
+	}
 }

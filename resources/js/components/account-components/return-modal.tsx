@@ -1,7 +1,7 @@
-import { Account } from '@/types';
+import { ReturnedAccount } from '@/types';
 import { useForm } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
-import { FormEventHandler } from 'react';
+import { FormEventHandler, useEffect } from 'react';
 import Heading from '../heading';
 import InputError from '../input-error';
 import { Button } from '../ui/button';
@@ -11,35 +11,55 @@ import { Label } from '../ui/label';
 import Modal from '../ui/modal';
 
 type Props = {
-    show: boolean;
-    onClose: () => void;
-    account: Account;
+	show: boolean;
+	onClose: () => void;
+	account?: ReturnedAccount;
+	is_Edit?: boolean;
+	th_level: number;
+	account_name: string;
+	account_email: string;
+	id: number;
 };
 
 type ReturnForm = {
-    return_price: number;
-    is_password_changed: boolean;
-    returned_date: string;
+	return_price: number;
+	is_password_changed: boolean;
+	returned_date: string;
 };
 
-const ReturnModal = ({ show, onClose, account }: Props) => {
-    const { data, setData, post, processing, errors } = useForm<Required<ReturnForm>>({
-        returned_date:
-            account.is_returned && account.returned_account?.returned_date
-                ? account.returned_account.returned_date
-                : new Date().toISOString().split('T')[0],
-        return_price: account.is_returned && account.returned_account?.return_price ? account.returned_account.return_price : 0,
-        is_password_changed:
-            account.is_returned && account.returned_account?.is_password_changed ? account.returned_account.is_password_changed : false,
-    });
+const ReturnModal = ({ show, onClose, account, is_Edit = false, th_level, account_email, account_name, id }: Props) => {
+	const { data, setData, post, processing, errors } = useForm<ReturnForm>({
+		return_price: is_Edit && account && account?.return_price > 0 ? account?.return_price : 0,
+		returned_date: is_Edit && account?.returned_date ? account.returned_date : new Date().toISOString().split('T')[0],
+		is_password_changed: is_Edit && account?.is_password_changed ? account.is_password_changed : false,
+	});
 
-    const submit: FormEventHandler = (e) => {
-        e.preventDefault();
-        post(route('account.return', account.id));
-        onClose();
-    };
+	useEffect(() => {
+		setData({
+			return_price: is_Edit && account && account?.return_price > 0 ? account?.return_price : 0,
+			returned_date: is_Edit && account?.returned_date ? account.returned_date : new Date().toISOString().split('T')[0],
+			is_password_changed: is_Edit && account?.is_password_changed ? account.is_password_changed : false,
+		});
+	}, [account, is_Edit, setData]);
 
-    return (
+	const submit: FormEventHandler = (e) => {
+		e.preventDefault();
+		if (is_Edit) {
+			post(route('account.edit_return', account?.id), {
+				onSuccess: () => {
+					onClose();
+				},
+			});
+		} else {
+			post(route('account.return', id), {
+				onSuccess: () => {
+					onClose();
+				},
+			});
+		}
+	};
+
+	return (
 		<Modal show={show} onClose={onClose} closeable={false}>
 			<div className="mx-auto w-full max-w-2xl rounded-2xl border border-white/20 bg-white/10 p-6 text-white shadow-xl backdrop-blur-md">
 				<Heading title="Return Account" description="Enter your details to create a return account." />
@@ -47,11 +67,11 @@ const ReturnModal = ({ show, onClose, account }: Props) => {
 				<div className="hide-scrollbar grid max-h-[70vh] grid-cols-1 gap-4 overflow-y-auto sm:max-h-[100vh] sm:grid-cols-2">
 					<div className="sm:col-span-2">
 						<Label htmlFor="acc_email">Account Email</Label>
-						<Input id="acc_email" className="border-gray-200" placeholder="Account Email" disabled value={account.account_email} />
+						<Input id="acc_email" className="border-gray-200" placeholder="Account Email" disabled value={account_email} />
 					</div>
 					<div>
 						<Label htmlFor="acc_name">Account Name</Label>
-						<Input id="acc_name" placeholder="Account Name" className="border-gray-200" disabled autoFocus value={account.account_name} />
+						<Input id="acc_name" placeholder="Account Name" className="border-gray-200" disabled autoFocus value={account_name} />
 					</div>
 					<div>
 						<Label htmlFor="th_level">Town Hall Level</Label>
@@ -62,9 +82,21 @@ const ReturnModal = ({ show, onClose, account }: Props) => {
 							placeholder="Town Hall Level"
 							disabled
 							min={0}
-							value={account.th_level}
+							value={th_level}
 						/>
 					</div>
+					{is_Edit && (
+						<>
+							<div>
+								<Label htmlFor="re_name">Returned By</Label>
+								<Input id="re_name" className="border-gray-200" disabled autoFocus value={account?.name} />
+							</div>
+							<div>
+								<Label htmlFor="sold_price">Sold Price</Label>
+								<Input id="sold_price" type="number" className="border-gray-200" disabled min={0} value={account?.sold_price} />
+							</div>
+						</>
+					)}
 				</div>
 
 				<form className="mt-2 grid grid-cols-1 gap-4 sm:grid-cols-2" onSubmit={submit}>

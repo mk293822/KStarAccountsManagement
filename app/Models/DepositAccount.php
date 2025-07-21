@@ -15,8 +15,7 @@ class DepositAccount extends Model
         'deposit_amount',
         'gave_account',
         'deposit_date',
-        'cancelled',
-        'return_deposit',
+		'cancelled',
         'return_deposit_amount',
         'cancelled_date'
     ];
@@ -26,6 +25,8 @@ class DepositAccount extends Model
         return [
             'deposit_date' => 'date',
             'cancelled_date' => 'date',
+			'cancelled' => 'boolean',
+			'gave_account' => 'boolean'
         ];
     }
 

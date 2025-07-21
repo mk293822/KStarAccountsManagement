@@ -18,7 +18,7 @@ class AccountFactory extends Factory
     public function definition(): array
     {
         $boughtPrice = $this->faker->numberBetween(10000, 300000);
-        $isSold = $this->faker->boolean(90);
+		$isSold = $this->faker->boolean(80);
         $boughtDate = Carbon::now()->subDays(rand(0, 400)); // up to 2 years ago
         $soldDate = null;
 
@@ -30,7 +30,7 @@ class AccountFactory extends Factory
             }
         }
 
-        $isReturned = !$isSold ? $this->faker->boolean(20) : false;
+		$isReturned = !$isSold ? $this->faker->boolean(40) : false;
 
         return [
             'account_name' => $this->faker->userName,
@@ -40,13 +40,13 @@ class AccountFactory extends Factory
             'th_level' => $this->faker->numberBetween(10, 17),
 
             'bought_price' => $boughtPrice,
-            'sold_price' => $isSold ? $this->faker->numberBetween(10000, 40000) : 0,
+			'sold_price' => $isSold ? $boughtPrice + $this->faker->numberBetween(10000, 40000) : 0,
 
             'is_acc_protection_changed' => $this->faker->boolean(90),
             'is_sold' => $isSold,
             'is_email_changed' => $this->faker->boolean(90),
-            'is_email_disabled' => $this->faker->boolean(10),
-            'is_deposit' => !$isSold && $this->faker->boolean(20),
+			'is_email_disabled' => $this->faker->boolean(40),
+			'is_deposit' => !$isSold && $this->faker->boolean(40),
             'is_returned' => $isReturned,
 
             'sold_by' => 1,
