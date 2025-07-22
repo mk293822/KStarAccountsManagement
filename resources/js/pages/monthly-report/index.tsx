@@ -1,5 +1,6 @@
 import Heading from '@/components/heading';
 import MonthlyAccounts from '@/components/monthly-report-components/monthly-accounts';
+import MonthlyReportHeader from '@/components/monthly-report-components/monthly-report-header';
 import { useCurrencyFormatter } from '@/hooks/use-currency-formatter';
 import AppLayout from '@/layouts/app-layout';
 import { Account, BreadcrumbItem } from '@/types';
@@ -52,7 +53,8 @@ const Index = ({
 		<AppLayout breadcrumbs={breadcrumbs}>
 			<Head title="Monthly Report" />
 			<div className="space-y-4 p-4">
-				<Heading title="Monthly Report" description="The monthly reports of the Accounts." />
+				<MonthlyReportHeader />
+
 				{/* Trading Overview */}
 				<div className="rounded-xl border border-white/20 p-6">
 					<div className="flex flex-row items-center justify-between">

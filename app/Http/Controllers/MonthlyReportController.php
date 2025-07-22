@@ -15,12 +15,13 @@ class MonthlyReportController extends Controller
 	 */
 	public function index(Request $request)
 	{
-		$currentYear = Carbon::now()->year;
-		$currentMonth = Carbon::now()->month;
+
+		$year = $request->input('year', now()->year);
+		$month = $request->input('month', now()->month);
 
 		// Base Queries
-		$accountsQuery = Account::whereYear('bought_date', $currentYear)
-			->whereMonth('bought_date', $currentMonth);
+		$accountsQuery = Account::whereYear('bought_date', $year)
+			->whereMonth('bought_date', $month);
 
 		$depositsQuery = (clone $accountsQuery)->get()
 			->filter(fn($acc) => $acc->depositAccounts->isNotEmpty())
@@ -52,6 +53,12 @@ class MonthlyReportController extends Controller
 		$total_returns = (clone $returnsQuery)->count();
 		$total_return_amount = (clone $returnsQuery)->sum('sold_price') - (clone $returnsQuery)->sum('return_price');
 
+		$years = Account::orderByDesc('bought_date')
+			->pluck('bought_date')
+			->map(fn($date) => Carbon::parse($date)->year)
+			->unique()
+			->values();
+
 		return Inertia::render('monthly-report/index', compact(
 			'accounts',
 			'total_bought_accounts',
@@ -63,7 +70,10 @@ class MonthlyReportController extends Controller
 			'total_return_deposit_amount',
 			'total_return_deposits',
 			'total_returns',
-			'total_return_amount'
+			'total_return_amount',
+			'year',
+			'month',
+			'years'
 		));
 	}
 }
