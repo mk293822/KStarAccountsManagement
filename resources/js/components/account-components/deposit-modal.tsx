@@ -19,7 +19,7 @@ type Props = {
 	account_name: string;
 	account_email: string;
 	id: number;
-	allCancelled: boolean;
+	allCancelled?: boolean;
 };
 
 type DepositForm = {

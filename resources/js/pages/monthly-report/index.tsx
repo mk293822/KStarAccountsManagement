@@ -53,7 +53,7 @@ const Index = ({
 		<AppLayout breadcrumbs={breadcrumbs}>
 			<Head title="Monthly Report" />
 			<div className="space-y-4 p-4">
-				<MonthlyReportHeader />
+				<MonthlyReportHeader page={accounts.meta.current_page} />
 
 				{/* Trading Overview */}
 				<div className="rounded-xl border border-white/20 p-6">

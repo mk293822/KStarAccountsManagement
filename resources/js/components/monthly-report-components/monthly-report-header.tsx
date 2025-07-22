@@ -12,7 +12,7 @@ interface MonthlyReportProps extends PageProps {
 	years: number[];
 }
 
-const MonthlyReportHeader = () => {
+const MonthlyReportHeader = ({ page }: { page: number | string }) => {
 	const { year: selectedYearProp, month: selectedMonthProp, years } = usePage<MonthlyReportProps>().props;
 
 	const [year, setYear] = useState(selectedYearProp?.toString() ?? currentYear.toString());
@@ -26,10 +26,14 @@ const MonthlyReportHeader = () => {
 	}, [selectedMonthProp, selectedYearProp]);
 
 	useEffect(() => {
-		if (year && month) {
-			router.get(route('monthly_report'), { year, month }, { preserveScroll: true, preserveState: true, replace: true });
-		}
-	}, [year, month]);
+		const timeout = setTimeout(() => {
+			if (year && month) {
+				router.get(route('monthly_report'), { year, month, page }, { preserveScroll: true, preserveState: true, replace: true });
+			}
+		}, 200);
+
+		return clearTimeout(timeout);
+	}, [year, month, page]);
 
 	return (
 		<div className="flex flex-row items-center justify-between">
