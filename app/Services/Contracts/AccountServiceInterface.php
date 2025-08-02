@@ -3,9 +3,8 @@
 namespace App\Services\Contracts;
 
 use App\Http\Requests\AccountCreateRequest;
-use App\Http\Requests\AccountDepositRequest;
 use App\Http\Requests\AccountEditRequest;
-use App\Http\Requests\AccountReturnRequest;
+
 use App\Http\Requests\AccountSoldRequest;
 use Illuminate\Http\Request;
 
@@ -15,12 +14,4 @@ interface AccountServiceInterface {
 	public function create(AccountCreateRequest $request);
 	public function update(AccountEditRequest $request, $id);
 	public function sold(AccountSoldRequest $request, $id);
-
-	public function deposit(AccountDepositRequest $request, $id);
-	public function editDeposit(Request $request, $id);
-	public function destroyDeposit($id);
-
-	public function return(AccountReturnRequest $request, $id);
-	public function editReturn(AccountReturnRequest $request, $id);
-	public function destroyReturn($id);
 }

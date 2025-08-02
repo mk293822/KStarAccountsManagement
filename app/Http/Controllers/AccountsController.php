@@ -10,14 +10,16 @@ use App\Http\Requests\AccountSoldRequest;
 use App\Http\Resources\AccountResource;
 use App\Models\Account;
 use App\Models\ReturnedAccount;
+use App\Services\AccountStatusService;
 use App\Services\Contracts\AccountServiceInterface;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class AccountsController extends Controller
 {
 
-	public function __construct(protected AccountServiceInterface $accountService) {}
+	public function __construct(protected AccountServiceInterface $accountService, protected AccountStatusService $accountStatusService) {}
 
     /**
      * Display a listing of the resource.
@@ -36,7 +38,7 @@ class AccountsController extends Controller
         return Inertia::render('accounts/create');
     }
 
-	public function store(AccountCreateRequest $request)
+	public function store(AccountCreateRequest $request): RedirectResponse
 	{
 		$account_create = $this->accountService->create($request);
 
@@ -60,7 +62,7 @@ class AccountsController extends Controller
 
 	public function return(AccountReturnRequest $request, $id)
 	{
-		$account_return = $this->accountService->return($request, $id);
+		$account_return = $this->accountStatusService->return($request, $id);
 
 		if ($account_return === 200) {
 			return back()->with('success', 'Account returned successfully!');
@@ -71,7 +73,7 @@ class AccountsController extends Controller
 
 	public function edit_return(AccountReturnRequest $request, $id)
 	{
-		$account_return = $this->accountService->editReturn($request, $id);
+		$account_return = $this->accountStatusService->editReturn($request, $id);
 
 		if ($account_return === 200) {
 			return back()->with('success', 'Account return edited successfully!');
@@ -82,7 +84,7 @@ class AccountsController extends Controller
 
 	public function destroy_return(string $id)
 	{
-		$account_return = $this->accountService->destroyReturn($id);
+		$account_return = $this->accountStatusService->destroyReturn($id);
 
 		if ($account_return === 200) {
 			return response()->json(['message' => 'Deleted'], 200);
@@ -93,7 +95,7 @@ class AccountsController extends Controller
 
 	public function deposit(AccountDepositRequest $request, $id)
 	{
-		$account_deposit = $this->accountService->deposit($request, $id);
+		$account_deposit = $this->accountStatusService->deposit($request, $id);
 
 		if ($account_deposit === 200) {
 			return back()->with('success', 'Deposit recorded successfully!');
@@ -104,7 +106,7 @@ class AccountsController extends Controller
 
 	public function edit_deposit(Request $request, $id)
 	{
-		$account_return = $this->accountService->editDeposit($request, $id);
+		$account_return = $this->accountStatusService->editDeposit($request, $id);
 
 		if ($account_return === 200) {
 			return back()->with('success', 'Account deposi edited successfully!');
@@ -115,7 +117,7 @@ class AccountsController extends Controller
 
 	public function destroy_deposit(string $id)
 	{
-		$account_return = $this->accountService->destroyDeposit($id);
+		$account_return = $this->accountStatusService->destroyDeposit($id);
 
 		if ($account_return === 200) {
 			return response()->json(['message' => 'Deleted'], 200);
